@@ -1,4 +1,4 @@
-angular.module("Dagr.admin.services", []).
+angular.module("Dagr.sessions.services", []).
 
 factory("authService", [
 	"$http",

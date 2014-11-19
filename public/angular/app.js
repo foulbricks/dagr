@@ -5,7 +5,15 @@ angular.module('Dagr', [
 	'ui.router',
 	'ngAnimate',
 	'ngCookies',
-	'Dagr.admin'
+	'Dagr.admin',
+	'Dagr.sessions'
+]).
+
+config([
+	"$locationProvider",
+	function($locationProvider){
+		$locationProvider.html5Mode(true);
+	}
 ]).
 
 run([

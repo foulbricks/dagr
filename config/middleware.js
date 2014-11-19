@@ -6,11 +6,13 @@ var favicon = 			require('static-favicon');
 var logger = 			require('morgan');
 var cookieParser = 		require('cookie-parser');
 var bodyParser = 		require('body-parser');
+var mongoose = 			require("mongoose");
 
 //Custom
 
 
 module.exports = function(app, dir){
+	mongoose.connect("mongodb://localhost/dagr");
 	app.use(favicon());
 	app.use(logger('dev'));
 	app.use(bodyParser.json());
