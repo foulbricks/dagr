@@ -12,7 +12,7 @@ var mongoose = 			require("mongoose");
 
 
 module.exports = function(app, dir){
-	mongoose.connect("mongodb://localhost/dagr");
+	mongoose.connect(app.get("dbUrl"));
 	app.use(favicon());
 	app.use(logger('dev'));
 	app.use(bodyParser.json());
