@@ -1,13 +1,13 @@
 angular.module("Dagr.admin.controllers", []).
 
-controller("AdminController", [
+controller("WorkspaceController", [
 	"$scope",
 	function($scope){
 		
 	}
 ]).
 
-controller("LoginController", [
+controller("WorkspaceIndex", [
 	"$scope",
 	function($scope){
 		

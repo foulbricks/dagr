@@ -1,6 +1,6 @@
 "use strict"
 
-var db = require("../config/db");
+var config = require("../config/config");
 var mongoose = require("mongoose");
 mongoose.models = {};
 mongoose.modelSchemas = {};
@@ -19,7 +19,7 @@ beforeEach(function(done){
 	
 	// Connect using test database, then clear DB
 	if(mongoose.connection.readyState === 0){
-		mongoose.connect(db.db.test, function(err){
+		mongoose.connect(config.db.test, function(err){
 			if(err)throw err;
 			return clearDB();
 		});

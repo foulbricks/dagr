@@ -12,7 +12,7 @@ var userSchema = new Schema({
 	},
 	email: 		{ type: String, required: "Email is Required!", lowercase: true, match: emailRegExp },
 	password: 	{ type: String, required: "Password is Required!" },
-	salt: 		{ type: String, required: "Salt is Required!" },
+	salt: 		{ type: String },
 	title: 		{ type: String, default: "Hacker" },
 	created_at:	{ type: Date },
 	updated_at:	{ type: Date, 	default: new Date }
@@ -61,12 +61,26 @@ userSchema.static("findUserByEmail", function(email, cb){
 userSchema.static("authenticate", function(email, pass, cb){
 	this.findUserByEmail(email, function(err, user){
 		if(err) return cb(err);
+		if(!user) return cb();
 		bcrypt.hash(pass, user.password, function(err, hash){
 			if(err) return cb(err);
 			if(hash == user.password) return cb(null, user);
 			cb();
 		});
 	});
+});
+
+userSchema.method("toJSON", function(){
+	var user = this;
+	return {
+		id: user.id,
+		name: {
+			first: user.name.first,
+			last: user.name.last
+		},
+		email: user.email,
+		title: user.title
+	}
 });
 
 // EXPORT

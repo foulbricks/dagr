@@ -129,7 +129,6 @@ describe("User", function(){
 		
 		describe("User#authenticate", function(){
 			it("should authenticate user", function(done){
-				
 				Factory.build("user", function(user){
 					User.authenticate(user.email, user.password, function(err, user){
 						should.not.exist(err);
@@ -137,8 +136,16 @@ describe("User", function(){
 						done();
 					});
 				});
-				
 			});
+			
+			it("should not authenticate user", function(done){
+				User.authenticate("fakeemail@email.com", "fakepassword", function(err, user){
+					should.not.exist(err);
+					should.not.exist(user);
+					done();
+				});
+			});
+			
 		});
 		
 	});

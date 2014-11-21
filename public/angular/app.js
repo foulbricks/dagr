@@ -6,7 +6,8 @@ angular.module('Dagr', [
 	'ngAnimate',
 	'ngCookies',
 	'Dagr.admin',
-	'Dagr.sessions'
+	'Dagr.sessions',
+	'Dagr.users'
 ]).
 
 config([

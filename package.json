@@ -20,6 +20,8 @@
 	"mongoose": "latest",
 	"mocha": "*",
 	"should": ">= 0.0.1",
-	"factory-lady": "*"
+	"factory-lady": "*",
+	"jsonwebtoken": "~1.1.2",
+	"express-jwt": "~0.5.0"
   }
 }

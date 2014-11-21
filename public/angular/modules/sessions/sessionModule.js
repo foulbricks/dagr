@@ -4,22 +4,23 @@ angular.module("Dagr.sessions", [
 ]).
 
 config([
-	"$stateProvider",
-	function($stateProvider){
+	"$stateProvider", "$httpProvider",
+	function($stateProvider, $httpProvider){
 		$stateProvider.
 		state("login", {
 			url: "/login",
-			controller: "SessionController",
+			controller: "LoginController",
 			templateUrl: "/angular/views/sessions/login.html",
 			resolve: {
 				user: ["authService", "$q", function(authService, $q){
-					if(authService.user) {
+					if(authService.token) {
 						$q.reject({authorized: true});
 					}
 				}]
 			}
 		});
 		
+		$httpProvider.interceptors.push("authInterceptor");
 	}
 ]).
 
