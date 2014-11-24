@@ -10,7 +10,7 @@ var userSchema = new Schema({
 		first: 	{ type: String, required: "First Name is Required!" }, 
 		last: 	{ type: String, required: "Last Name is Required!" }
 	},
-	email: 		{ type: String, required: "Email is Required!", lowercase: true, match: emailRegExp },
+	email: 		{ type: String, required: "Invalid email", lowercase: true, match: emailRegExp },
 	password: 	{ type: String, required: "Password is Required!" },
 	salt: 		{ type: String },
 	title: 		{ type: String, default: "Hacker" },
@@ -19,9 +19,14 @@ var userSchema = new Schema({
 });
 
 // VALIDATION
-userSchema.path("password").validate(function(val, respond){
-	validator.minLength(val, 6, respond);
-}, "{PATH} must be more than 6 characters");
+userSchema.path("password").validate(validator.minLength(6), "Password must be more than 6 characters");
+
+userSchema.path("email").validate(function(val, respond){
+	this.model("User").findUserByEmail(val, function(err, user){
+		if(err) respond(false);
+		user ? respond(false) : respond();
+	});
+}, "You already have an account.");
 
 // PRE SAVING HOOK
 // PASSWORD HASHING - Set salt, Hash Password if it has been updated.

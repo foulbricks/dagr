@@ -18,6 +18,15 @@ config([
 					}
 				}]
 			}
+		}).
+		state("logout", {
+			url: "/logout",
+			controller: [ "$scope", "authService", "$state",
+				function($scope, authService, $state){
+					authService.logout();
+					$state.go("login");
+				}
+			]
 		});
 		
 		$httpProvider.interceptors.push("authInterceptor");

@@ -10,7 +10,7 @@ router.post('/login', function(req, res) {
 		if(err) return next(err);
 		if(user){
 			var token = jwt.sign(user, "secret", { expiresInMinutes: 60 * 3 } );
-			res.json({ token: token });
+			res.json({ token: token, user: user });
 		}
 		else {
 			res.status(401).json({ error: "Invalid credentials", token: null })

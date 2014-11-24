@@ -3,7 +3,7 @@
 angular.module('Dagr', [
 	'ngResource', 
 	'ui.router',
-	'ngAnimate',
+	// 'ngAnimate',
 	'ngCookies',
 	'Dagr.admin',
 	'Dagr.sessions',

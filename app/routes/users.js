@@ -12,11 +12,15 @@ router.post('/signup', function(req, res) {
 	})
 	
 	user.save(function(err, saved){
-		if(err){
-			res.status(500).json({ status: false, errors: err });
+		if(!err){
+			res.json({ status: true, errors: null });
 		}
 		else {
-			res.json({ status: true, errors: null });
+			var e = [];
+			for(var prop in err.errors){
+				e.push(err.errors[prop].message);
+			}
+			res.status(400).json({ status: false, errors: e });
 		}
 	});
 });

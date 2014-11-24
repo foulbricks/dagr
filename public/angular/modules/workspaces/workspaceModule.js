@@ -37,6 +37,7 @@ run([
 				}
 			}
 		);
+		authService.user = $window.localStorage.user && JSON.parse($window.localStorage.user);
 		authService.token = $window.sessionStorage.token;
 	}
 ]);
