@@ -6,8 +6,10 @@
 	<base href="/">
     <title>Dagr</title>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" />
-	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+	<!-- build:css dist/assets/css/app.min.css -->
+	<link href="/assets/lib/fontawesome/css/font-awesome.css" rel="stylesheet" />
+    <link rel='stylesheet' href='assets/stylesheets/style.css' />
+	<!-- endbuild -->
   </head>
   <body>
 	<nav class="navbar navbar-inverse navbar-fixed-top" role="navbar" ng-controller="NavController">
@@ -51,11 +53,12 @@
 		</div>
 	</div>
 
-	<script src="angular/lib/angular.js"></script>
-	<script src="angular/lib/angular-ui-router.js"></script>
-	<script src="angular/lib/angular-resource.js"></script>
-	<script src="angular/lib/angular-animate.js"></script>
-	<script src="angular/lib/angular-cookies.js"></script>
+	<!-- build:js dist/assets/js/app.min.js -->
+	<script src="assets/lib/angular.js"></script>
+	<script src="assets/lib/angular-ui-router.js"></script>
+	<script src="assets/lib/angular-resource.js"></script>
+	<script src="assets/lib/angular-animate.js"></script>
+	<script src="assets/lib/angular-cookies.js"></script>
 	<script src="angular/app.js"></script>
 	<script src="angular/services.js"></script>
 	<script src="angular/controllers.js"></script>
@@ -70,5 +73,6 @@
 	<script src="angular/modules/users/userModule.js"></script>
 	<script src="angular/modules/users/userServices.js"></script>
 	<script src="angular/modules/users/userControllers.js"></script>
+	<!-- endbuild -->
   </body>
 </html>
