@@ -11,7 +11,7 @@ controller("SignupController", [
 		
 				userService.signup({user: $scope.user}).
 				success(function(data){
-					$state.go("workspace.index");
+					$state.go("workspaces.index");
 				}).
 				error(function(err){
 					$scope.errors = err.errors;

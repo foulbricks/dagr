@@ -1,6 +1,7 @@
 body {
-  padding-top: 50px;
+  padding-top: 60px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background: #efefef;
 }
 
 a {
@@ -18,6 +19,7 @@ input.ng-dirty.ng-invalid{
 .form-signin {
 	border: 1px solid rgba(0,0,0,0.1);
 	padding: 15px 35px 15px;
+	background: #fff;
 }
 
 #wrapper {
@@ -33,14 +35,15 @@ input.ng-dirty.ng-invalid{
 }
 
 #sidebar-wrapper {
-    z-index: 1000;
+    z-index: 2000;
     position: fixed;
+	top: 50px;
     left: 250px;
     width: 0;
     height: 100%;
     margin-left: -250px;
     overflow-y: auto;
-    background: #000;
+	background: #F53F39;
     -webkit-transition: all 0.5s ease;
     -moz-transition: all 0.5s ease;
     -o-transition: all 0.5s ease;
@@ -80,7 +83,7 @@ input.ng-dirty.ng-invalid{
 .sidebar-nav li a {
     display: block;
     text-decoration: none;
-    color: #999999;
+    color: #D8DACF;
 }
 
 .sidebar-nav li a:hover {
@@ -95,13 +98,14 @@ input.ng-dirty.ng-invalid{
 }
 
 .sidebar-nav > .sidebar-brand {
-    height: 65px;
+    height: 50px;
     font-size: 18px;
     line-height: 60px;
+	background: #F53F39;
 }
 
 .sidebar-nav > .sidebar-brand a {
-    color: #999999;
+    color: #D8DACF;
 }
 
 .sidebar-nav > .sidebar-brand a:hover {

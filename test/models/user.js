@@ -33,7 +33,7 @@ describe("User", function(){
 		it("should not validate with empty email", function(done){
 			testUser.email = "";
 			testUser.save(function(err){
-				err.errors.email.message.should.equal("Email is Required!");
+				err.errors.email.message.should.equal("Invalid email");
 				done();
 			});
 		});
@@ -57,7 +57,7 @@ describe("User", function(){
 		it("should not validate with password less than 6 characters", function(done){
 			testUser.password = "testo";
 			testUser.save(function(err){
-				err.errors.password.message.should.equal("password must be more than 6 characters");
+				err.errors.password.message.should.equal("Password must be more than 6 characters");
 				done();
 			});
 		});
