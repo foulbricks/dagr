@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html ng-app="Dagr">
+  <head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<base href="/">
+    <title>Dagr</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" />
+	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+	<nav class="navbar navbar-inverse navbar-fixed-top" role="navbar" ng-controller="NavController">
+		<div ng-show="!loggedIn">
+			<div class="container">
+				<div class="navbar-header">
+					<p class="navbar-text h3">DAGR</p>
+				</div>
+				<div class="collapse navbar-collapse">
+					<ul class="nav navbar-nav navbar-right">
+						<li><a ui-sref="signup" class="navbar-link">Sign Up</a></li>
+						<li><a ui-sref="login" class="navbar-link">Log In</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div ng-show="loggedIn">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<p class="navbar-text">No workspace selected.</p>
+				</div>
+				<div class="collapse navbar-collapse">
+					<ul class="nav navbar-nav navbar-right">
+						<li>
+							
+							<a href="#" class="navbar-link"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{ name }} <span class="caret"></span></a>
+						</li>
+						<li><a ui-sref="logout" class="navbar-link">Log Out</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		
+	</nav>
+
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-xs-12 border-left">
+				<div ui-view></div>
+			</div>
+		</div>
+	</div>
+
+	<script src="angular/lib/angular.js"></script>
+	<script src="angular/lib/angular-ui-router.js"></script>
+	<script src="angular/lib/angular-resource.js"></script>
+	<script src="angular/lib/angular-animate.js"></script>
+	<script src="angular/lib/angular-cookies.js"></script>
+	<script src="angular/app.js"></script>
+	<script src="angular/services.js"></script>
+	<script src="angular/controllers.js"></script>
+	<script src="angular/filters.js"></script>
+	<script src="angular/directives.js"></script>
+	<script src="angular/modules/sessions/sessionModule.js"></script>
+	<script src="angular/modules/sessions/sessionServices.js"></script>
+	<script src="angular/modules/sessions/sessionControllers.js"></script>
+	<script src="angular/modules/workspaces/workspaceModule.js"></script>
+	<script src="angular/modules/workspaces/workspaceServices.js"></script>
+	<script src="angular/modules/workspaces/workspaceControllers.js"></script>
+	<script src="angular/modules/users/userModule.js"></script>
+	<script src="angular/modules/users/userServices.js"></script>
+	<script src="angular/modules/users/userControllers.js"></script>
+  </body>
+</html>
