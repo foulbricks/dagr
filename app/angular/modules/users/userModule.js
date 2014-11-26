@@ -10,7 +10,7 @@ config([
 		state("signup", {
 			url: "/signup",
 			controller: "SignupController",
-			templateUrl: "angular/views/users/signup.html"
+			templateUrl: "dist/modules/users/views/signup.html"
 		});
 	}
 ]);

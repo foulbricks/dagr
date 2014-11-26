@@ -12,7 +12,7 @@ config([
 			url: "/workspaces",
 			abstract: true,
 			controller: "WorkspaceController",
-			templateUrl: "/angular/views/workspaces/home.html",
+			templateUrl: "/dist/modules/workspaces/views/home.html",
 			resolve: {
 				user: ["authService", "$q", function(authService, $q){
 					return authService.token || $q.reject({ unauthorized: true });
@@ -22,7 +22,7 @@ config([
 		state("workspaces.index", {
 			url: "/index",
 			controller: "WorkspaceIndex",
-			templateUrl: "/angular/views/workspaces/index.html"
+			templateUrl: "/dist/modules/workspaces/views/index.html"
 		});
 	}
 ]).

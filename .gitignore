@@ -3,3 +3,5 @@ node_modules/
 public/dist/
 .tmp/
 .gitignore
+.sass-cache/
+style.css.map

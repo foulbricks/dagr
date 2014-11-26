@@ -10,7 +10,7 @@ config([
 		state("login", {
 			url: "/login",
 			controller: "LoginController",
-			templateUrl: "/angular/views/sessions/login.html",
+			templateUrl: "/dist/modules/sessions/views/login.html",
 			resolve: {
 				user: ["authService", "$q", function(authService, $q){
 					if(authService.token) {

@@ -3,7 +3,16 @@ module.exports = function (grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
 
-        clean: ["public/dist", '.tmp'],
+		project: {
+			app: ["app"],
+			assets: ["<%= project.app %>/assets"],
+			sass: ["<%= project.assets %>/sass/styles.scss"]
+		},
+
+        clean: {
+			js: ["public/dist/modules", "public/dist/views", "public/dist/assets/js", ".tmp"],
+			css: ["public/dist/assets/css", ".tmp"]
+		},
 
         copy: {
             main: {
@@ -13,6 +22,18 @@ module.exports = function (grunt) {
                 dest: 'public/dist/'
             }
         },
+
+		sass: {
+			dev: {
+				options: {
+					style: "expanded",
+					compass: false
+				},
+				files: {
+					'<%= project.assets %>/stylesheets/style.css':'<%= project.sass %>'
+				}
+			}
+		},
 
         useminPrepare: {
             html: 'app/angular/views/index.html',
@@ -31,7 +52,42 @@ module.exports = function (grunt) {
                 report: 'min',
                 mangle: true
             }
-        }
+        },
+
+		watch: {
+			scripts: {
+				files: ["app/angular/**.js"],
+				tasks: ["buildjs"],
+				options: {
+					spawn: false
+				}
+			},
+			sass: {
+				files: '<%= project.assets %>/sass/{,*/}*.{scss,sass}',
+				tasks: ["buildcss"]
+			}
+		},
+		
+		nodemon: {
+			dev: {
+				script: "scripts/www",
+				options: {
+					nodeArgs: ["--debug"],
+					watchedExtensions: ["js"],
+					ignore: ["node_modules/**"],
+					env: {
+						PORT: "3000"
+					}
+				}
+			}
+		},
+		
+		concurrent: {
+			tasks: ["nodemon", "watch"],
+			options: {
+				logConcurrentOutput: true
+			}
+		}
     });
 
     grunt.loadNpmTasks('grunt-contrib-clean');
@@ -39,28 +95,31 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-uglify');
+	grunt.loadNpmTasks('grunt-contrib-watch');
+	grunt.loadNpmTasks('grunt-contrib-sass');
     grunt.loadNpmTasks('grunt-usemin');
+	grunt.loadNpmTasks('grunt-nodemon');
+	grunt.loadNpmTasks("grunt-concurrent");
 
-    // grunt.registerTask('adjustBuiltLinks', 'Performing Final Cleanups', function() {
-    // 
-    //     var indexDist='dist/app/index.html';
-    // 
-    //     grunt.log.writeln('Performing Final Cleanups');
-    // 
-    //     var indexContent=grunt.file.read(indexDist);
-    // 
-    //     indexContent=indexContent.replace('<link rel="stylesheet" href="app/built/app.min.css"/>','<link rel="stylesheet" href="built/app.min.css"/>');
-    // 
-    //     indexContent=indexContent.replace('<script src="app/built/app.min.js"></script>','<script src="built/app.min.js"></script>');
-    // 
-    //     grunt.file.write(indexDist, indexContent);
-    // 
-    // });
-
+	grunt.registerTask("buildjs", [
+		"clean:js",
+		"copy",
+		"useminPrepare",
+		"concat",
+		"uglify",
+		"usemin"
+	]);
+	
+	grunt.registerTask("buildcss", [
+		"clean:css",
+		"sass:dev",
+		"useminPrepare",
+		"concat",
+		"cssmin",
+		"usemin"
+	]);
 
     // Tell Grunt what to do when we type "grunt" into the terminal
-    grunt.registerTask('default', [
-       'clean', 'copy', 'useminPrepare', 'concat', 'uglify', 'cssmin', 'usemin'// ,'adjustBuiltLinks'
-    ]);
+    grunt.registerTask('default', ["concurrent"]);
 
 };

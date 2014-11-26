@@ -11,7 +11,7 @@ module.exports = function(app, dir){
 	app.use("/api", users);
 	
 	app.get("*", function(req, res){
-		res.sendfile(dir + '/public/angular/views/index.html');
+		res.sendfile(dir + '/public/dist/views/index.html');
 	});
 	
 	app.use(errors);
