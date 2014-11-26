@@ -17,7 +17,8 @@ module.exports = function (grunt) {
         useminPrepare: {
             html: 'app/angular/views/index.html',
 			options: {
-		    	dest: 'public'
+		    	dest: 'public',
+				root: "app"
 		    }
         },
 
