@@ -5,10 +5,16 @@ var Factory = require("../support/factories");
 var testUser = null;
 
 describe("User", function(){
+	
 	beforeEach(function(done){
 		Factory.build("user", function(user){
 			testUser = user;
 		});
+		done();
+	});
+	
+	afterEach(function(done){
+		testUser = null;
 		done();
 	});
 	
@@ -21,7 +27,7 @@ describe("User", function(){
 				done();
 			});
 		});
-		
+
 		it("should not validate with empty last name", function(done){
 			testUser.name.last = "";
 			testUser.save(function(err){
@@ -29,7 +35,7 @@ describe("User", function(){
 				done();
 			});
 		});
-		
+
 		it("should not validate with empty email", function(done){
 			testUser.email = "";
 			testUser.save(function(err){
@@ -37,7 +43,7 @@ describe("User", function(){
 				done();
 			});
 		});
-		
+
 		it("should not validate with empty password", function(done){
 			testUser.password = "";
 			testUser.save(function(err){
@@ -45,7 +51,7 @@ describe("User", function(){
 				done();
 			});
 		});
-		
+
 		it("should not validate with invalid email format", function(done){
 			testUser.email = "awdsome";
 			testUser.save(function(err){
@@ -53,7 +59,7 @@ describe("User", function(){
 				done();
 			});
 		});
-		
+
 		it("should not validate with password less than 6 characters", function(done){
 			testUser.password = "testo";
 			testUser.save(function(err){
@@ -61,32 +67,52 @@ describe("User", function(){
 				done();
 			});
 		});
-		
-		it("should validate with valid user", function(done){
-			var beforeUser = null;
-			Factory.build("user", function(user){
-				beforeUser = user;
-			});
-			
-			testUser.save(function(err, createdUser){
+	
+		it("should not validate with email already on database", function(done){
+			testUser.save(function(err){
 				should.not.exist(err);
-				createdUser.name.first.should.equal(beforeUser.name.first);
-				createdUser.name.last.should.equal(beforeUser.name.last);
-				createdUser.email.should.equal(beforeUser.email);
-				createdUser.salt.should.not.equal(beforeUser.salt);
-				createdUser.password.should.not.equal(beforeUser.password);
-				createdUser.title.should.equal("Hacker");
-				done();
+				Factory.build("user", function(anotherUser){
+					anotherUser.save(function(err){
+						should.exist(err.errors.email);
+						done();
+					});
+				});
+			})
+		});
+
+		it("should validate with valid user", function(done){
+			Factory.build("user", function(beforeUser){
+				testUser.save(function(err, createdUser){
+					should.not.exist(err);
+					createdUser.name.first.should.equal(beforeUser.name.first);
+					createdUser.name.last.should.equal(beforeUser.name.last);
+					createdUser.email.should.equal(beforeUser.email);
+					createdUser.salt.should.not.equal(beforeUser.salt);
+					createdUser.password.should.not.equal(beforeUser.password);
+					createdUser.title.should.equal("Hacker");
+					done();
+				});
+			})
+		});
+
+		it("should validate on update", function(done){
+			testUser.save(function(err, u){
+				should.not.exist(err);
+				testUser.save(function(err, createdUser){
+					should.not.exist(err);
+					done();
+				});
 			});
 		});
+		
 	});
 	
 	describe("Pre saving hooks", function(){
-		var beforeUser = null;
+		var beforeUserSaved = null;
 		
 		beforeEach(function(done){
 			Factory.build("user", function(user){
-				beforeUser = user;
+				beforeUserSaved = user;
 			});
 			done();
 		});
@@ -94,8 +120,8 @@ describe("User", function(){
 		
 		it("should hash password and create salt", function(done){
 			testUser.save(function(err, createdUser){
-				createdUser.password.should.not.equal(beforeUser.password);
-				createdUser.salt.should.not.equal(beforeUser.salt);
+				createdUser.password.should.not.equal(beforeUserSaved.password);
+				createdUser.salt.should.not.equal(beforeUserSaved.salt);
 				done();
 			});
 		});
@@ -109,44 +135,47 @@ describe("User", function(){
 		
 	});
 	
-	describe("Statics depending on saved user", function(){
-		
-		beforeEach(function(done){
-			testUser.save(function(err){
-				done();
-			});
-		});
+	describe("Static methods", function(){
 		
 		describe("User#findUserByEmail", function(){
 			it("should find an user by email", function(done){
-				User.findUserByEmail(testUser.email, function(err, user){
+				testUser.save(function(err){
 					should.not.exist(err);
-					should.exist(user.id);
-					done();
-				});
-			});
-		});
-		
-		describe("User#authenticate", function(){
-			it("should authenticate user", function(done){
-				Factory.build("user", function(user){
-					User.authenticate(user.email, user.password, function(err, user){
+					User.findUserByEmail(testUser.email, function(err, user){
 						should.not.exist(err);
 						should.exist(user.id);
 						done();
 					});
 				});
 			});
+		});
+		
+		describe("User#authenticate", function(){
+			it("should authenticate user", function(done){
+				testUser.save(function(err){
+					should.not.exist(err);
+					Factory.build("user", function(user){
+						User.authenticate(user.email, user.password, function(err, user){
+							should.not.exist(err);
+							should.exist(user.id);
+							done();
+						});
+					});
+				});
+			});
 			
 			it("should not authenticate user", function(done){
-				User.authenticate("fakeemail@email.com", "fakepassword", function(err, user){
+				testUser.save(function(err){
 					should.not.exist(err);
-					should.not.exist(user);
-					done();
+					User.authenticate("fakeemail@email.com", "fakepassword", function(err, user){
+						should.not.exist(err);
+						should.not.exist(user);
+						done();
+					});
 				});
 			});
 			
 		});
-		
 	});
+	
 });

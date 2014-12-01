@@ -1,10 +1,11 @@
 var mongoose = require("mongoose");
 var bcrypt = require("bcrypt");
 var validator = require("./lib/validation-utils");
+var Workspace = require("./workspace");
+
 var Schema = mongoose.Schema;
 var emailRegExp = /^([\w\-\.]+@([\w\-]+\.)+[\w\-]{2,4})+$/i
 
-// SCHEMA DEFINITION
 var userSchema = new Schema({
 	name: { 
 		first: 	{ type: String, required: "First Name is Required!" }, 
@@ -18,18 +19,19 @@ var userSchema = new Schema({
 	updated_at:	{ type: Date, 	default: new Date }
 });
 
-// VALIDATION
+// VALIDATION - Password must be more than 6 characters
 userSchema.path("password").validate(validator.minLength(6), "Password must be more than 6 characters");
 
+// VALIDATION - Email must be unique
 userSchema.path("email").validate(function(val, respond){
+	var self = this;
 	this.model("User").findUserByEmail(val, function(err, user){
 		if(err) respond(false);
-		user ? respond(false) : respond();
+		user && user.id != self.id ? respond(false) : respond();
 	});
 }, "You already have an account.");
 
-// PRE SAVING HOOK
-// PASSWORD HASHING - Set salt, Hash Password if it has been updated.
+// PRE SAVING HOOK - PASSWORD HASHING - Set salt, Hash Password if it has been updated.
 userSchema.pre("save", function(next){
 	var user = this;
 	
@@ -48,21 +50,18 @@ userSchema.pre("save", function(next){
 	
 });
 
-// PRE SAVING HOOK
-// SET CREATED AT ON FIRST SAVE
+// PRE SAVING HOOK - SET CREATED AT ON FIRST SAVE
 userSchema.pre("save", function(next){
 	if(!this.created_at) this.created_at = new Date;
 	next();
 });
 
-// STATICS
-// FINDER - Return user by email
+// STATICS - FINDER - Return user by email
 userSchema.static("findUserByEmail", function(email, cb){
 	return this.findOne({email: email}, cb);
 });
 
-// STATICS
-// Authenticate user with email/password
+// STATICS - Authenticate user with email/password
 userSchema.static("authenticate", function(email, pass, cb){
 	this.findUserByEmail(email, function(err, user){
 		if(err) return cb(err);
@@ -75,6 +74,7 @@ userSchema.static("authenticate", function(email, pass, cb){
 	});
 });
 
+// METHOD - Overwrite toJSON to obfuscate some attributes
 userSchema.method("toJSON", function(){
 	var user = this;
 	return {
@@ -84,9 +84,9 @@ userSchema.method("toJSON", function(){
 			last: user.name.last
 		},
 		email: user.email,
-		title: user.title
+		title: user.title,
+		workspaces: Workspace.find({ owner_id: user.id })
 	}
 });
 
-// EXPORT
 module.exports = mongoose.model("User", userSchema);
