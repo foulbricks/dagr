@@ -12,7 +12,7 @@ beforeEach(function(done){
 	// Clears all collections on database
 	function clearDB(){
 		for(var i in mongoose.connection.collections){
-			mongoose.connection.collections[i].remove(function(){});
+			mongoose.connection.collections[i].drop(function(){});
 		}
 		return done();
 	}
