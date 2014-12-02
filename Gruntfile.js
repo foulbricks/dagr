@@ -10,7 +10,7 @@ module.exports = function (grunt) {
 		},
 
         clean: {
-			js: ["public/dist/modules", "public/dist/views", "public/dist/assets/js", ".tmp"],
+			js: ["public/dist/modules", "public/dist/views", "public/dist/assets/js", ".tmp/"],
 			css: ["public/dist/assets/css", ".tmp"]
 		},
 
@@ -18,7 +18,7 @@ module.exports = function (grunt) {
             main: {
                 expand: true,
                 cwd: 'app/angular',
-                src:['views/*.html', '**/views/*.html'],
+                src:['views/*.html', '**/**/views/*.html'],
                 dest: 'public/dist/'
             }
         },
@@ -74,7 +74,7 @@ module.exports = function (grunt) {
 				options: {
 					nodeArgs: ["--debug"],
 					watchedExtensions: ["js"],
-					ignore: ["node_modules/**"],
+					ignore: ["node_modules/**", "public/**"],
 					env: {
 						PORT: "3000"
 					}

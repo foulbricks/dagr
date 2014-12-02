@@ -1,1 +1,13 @@
-<p>HELLO <br />FROM <br /> WORKSPACE!</p>
+<div class="row"> 
+	<div class="col-sm-12">
+		<div ng-show="workspaces.length < 1">
+			<p class="h3">You do not have any workspaces associated with your account!</p>
+			<p><a ui-sref="workspaces.new"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Create a new workspace</a></p>
+		</div>
+		<div ng-show="workspaces.length > 0">
+			<ul>
+				<li ng-repeat="workspace in workspaces">{{ workspace.name }}</li>
+			</ul>
+		</div>
+	</div>
+</div>

@@ -5,7 +5,7 @@ angular.module('Dagr', [
 	'ui.router',
 	'ngAnimate',
 	'ngCookies',
-	'Dagr.admin',
+	'Dagr.workspaces',
 	'Dagr.sessions',
 	'Dagr.users'
 ]).

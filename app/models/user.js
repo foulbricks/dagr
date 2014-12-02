@@ -84,8 +84,7 @@ userSchema.method("toJSON", function(){
 			last: user.name.last
 		},
 		email: user.email,
-		title: user.title,
-		workspaces: Workspace.find({ owner_id: user.id })
+		title: user.title
 	}
 });
 

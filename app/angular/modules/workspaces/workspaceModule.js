@@ -1,7 +1,6 @@
-angular.module("Dagr.admin", [
-	"Dagr.admin.services",
-	"Dagr.admin.controllers",
-	"Dagr.sessions.services"
+angular.module("Dagr.workspaces", [
+	"Dagr.workspaces.services",
+	"Dagr.workspaces.controllers"
 ]).
 
 config([
@@ -23,6 +22,11 @@ config([
 			url: "/index",
 			controller: "WorkspaceIndex",
 			templateUrl: "/dist/modules/workspaces/views/index.html"
+		}).
+		state("workspaces.new", {
+			url: "/new",
+			controller: "WorkspaceNew",
+			templateUrl: "/dist/modules/workspaces/views/new.html"
 		});
 	}
 ]).

@@ -5,10 +5,12 @@ module.exports = function(app, dir){
 	var users = 	require(dir + '/app/routes/users');
 	var errors = 	require(dir + "/app/routes/errors");
 	var sessions = 	require(dir + "/app/routes/sessions");
+	var workspaces = require(dir + "/app/routes/workspaces");
 	
 	app.use('/api', expressJwt({secret: "secret"}).unless({ path: ["/api/signup", "/api/login"] }));
 	app.use("/api", sessions);
 	app.use("/api", users);
+	app.use("/api", workspaces);
 	
 	app.get("*", function(req, res){
 		res.sendfile(dir + '/public/dist/views/index.html');

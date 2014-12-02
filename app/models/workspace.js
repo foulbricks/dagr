@@ -31,4 +31,15 @@ workspaceSchema.path("name").validate(function(name, respond){
 	);
 });
 
+// Overwrite toJSON
+workspaceSchema.method("toJSON", function(){
+	var workspace = this;
+	return {
+		id: workspace.id,
+		name: workspace.name,
+		owner: workspace.owner,
+		people: []
+	}
+})
+
 module.exports = mongoose.model("Workspace", workspaceSchema);

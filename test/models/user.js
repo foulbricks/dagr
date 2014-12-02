@@ -178,4 +178,16 @@ describe("User", function(){
 		});
 	});
 	
+	describe("Instance methods", function(){
+		describe("#toJSON", function(){
+			it("should not expose password or salt", function(done){
+				var user = testUser.toJSON();
+				should.not.exist(user.password);
+				should.not.exist(user.salt);
+				should.exist(user.name);
+				done();
+			});
+		});
+	});
+	
 });

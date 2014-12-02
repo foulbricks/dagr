@@ -39,7 +39,7 @@ run([
 		$rootScope.$on("$stateChangeError", 
 			function(event, toState, toParams, fromState, fromParams, error){
 				if(error.authorized){
-					$state.go("admin");
+					$state.go("workspaces.index");
 				}
 			}
 		);

@@ -9,7 +9,7 @@ router.post('/signup', function(req, res) {
 		email: data.email,
 		password: data.password,
 		title: data.title,
-	})
+	});
 	
 	user.save(function(err, saved){
 		if(!err){
