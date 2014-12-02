@@ -1,5 +1,6 @@
 var utils = require("../utils");
 var should = require("should");
+var async = require("async");
 var config = require("../../config/config");
 var User = require("../../app/models/user");
 var Workspace = require("../../app/models/workspace");
@@ -36,21 +37,43 @@ describe("Workspace", function(){
 			});
 		});
 		
-		// it("should not be valid if reaches maximum limit of workspaces", function(done){
-		// 	var workspace = null;
-		// 	for(var i = 0; i > LIMIT; i++){
-		// 		workspace = new Workspace({name: "Test Workspace " + i, owner: testUser.id, minions: []});
-		// 		workspace.save(function(err, w){
-		// 			should.not.exist(err);
-		// 		});
-		// 	}
-		// 	
-		// 	workspace = new Workspace({name: "Test Workspace", owner: testUser.id, minions: []});
-		// 	workspace.save(function(err, w){
-		// 		should.exist(err.errors.owner);
-		// 		done();
-		// 	});
-		// });
+		it("should not be valid if reaches maximum limit of workspaces", function(done){
+			var workspace = null;
+			var callbacks = [];
+			for(var i = 0; LIMIT > i; i++){
+				callbacks.push((function(i){
+					return function(callback){
+						workspace = new Workspace({name: "Test Workspace " + i, owner: testUser.id, minions: []});
+						workspace.save(function(err, w){
+							should.not.exist(err);
+							callback();
+						});
+					}
+				})(i));
+			}
+			
+			async.series(callbacks.concat(
+				function(){
+					workspace = new Workspace({name: "Test Workspace", owner: testUser.id, minions: []});
+					workspace.save(function(err, w){
+						should.exist(err.errors.owner);
+						done();
+					});
+				}
+			));
+		});
+		
+		it("should not be valid if name is not unique in set of user's workspaces", function(done){
+			var workspace = new Workspace({name: "Test Workspace", owner: testUser.id, minions: []});
+			workspace.save(function(err){
+				should.not.exist(err);
+				var w = new Workspace({name: "Test Workspace", owner: testUser.id, minions: []});
+				w.save(function(e){
+					should.exist(e.errors.name);
+					done();
+				});
+			});
+		});
 		
 		
 		

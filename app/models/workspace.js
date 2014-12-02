@@ -14,22 +14,21 @@ var workspaceSchema = new Schema({
 
 // VALIDATION - Do not allow more than the limit of workspaces
 workspaceSchema.path("owner").validate(function(val, respond){
-	this.model("Workspace").find({ owner: val }).
-	count().
-	exec(function(err, count){
+	this.model("Workspace").count({ owner: val }, function(err, count){
 		if(err) respond(false);
-		count > LIMIT ? respond(false) : respond();
+		count >= LIMIT ? respond(false) : respond(true);
 	});
 }, "You cannot have more than " + LIMIT + " workspaces");
 
 // VALIDATION - Make sure name of workspace belonging to user is unique
 workspaceSchema.path("name").validate(function(name, respond){
-	this.model("Workspace").find({ name: name, owner: this.id}).
-	count().
-	exec(function(err, count){
-		if(err) respond(false);
-		count > 0 ? respond(false) : respond()
-	});
-})
+	var self = this;
+	this.model("Workspace").count({ name: name, owner: self.owner},
+		function(err, count){
+			if(err) respond(false);
+			count > 0 ? respond(false) : respond(true)
+		}
+	);
+});
 
 module.exports = mongoose.model("Workspace", workspaceSchema);
