@@ -10,13 +10,7 @@ controller("WorkspaceController", [
 controller("WorkspaceIndex", [
 	"$scope", "workspaceService",
 	function($scope, workspaceService){
-		workspaceService.list().
-		success(function(data){
-			$scope.workspaces = data.workspaces;
-		}).
-		error(function(err){
-			$scope.workspaces = [];
-		});
+		$scope.workspaces = workspaceService.list();
 	}
 ]).
 

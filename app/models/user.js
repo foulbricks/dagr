@@ -16,7 +16,8 @@ var userSchema = new Schema({
 	salt: 		{ type: String },
 	title: 		{ type: String, default: "Hacker" },
 	created_at:	{ type: Date },
-	updated_at:	{ type: Date, 	default: new Date }
+	updated_at:	{ type: Date, 	default: new Date },
+	workspaceInvites: [{ type: Schema.Types.ObjectId, ref: "Workspace" }]
 });
 
 // VALIDATION - Password must be more than 6 characters

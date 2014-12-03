@@ -6,13 +6,7 @@ controller("NavController", [
 		$scope.loggedIn = authService.token !== undefined;
 		$scope.name = authService.user && [authService.user.name.first, authService.user.name.last].join(" ") || "Stranger";
 		
-		workspaceService.list().
-		success(function(data){
-			$scope.workspaces = data.workspaces;
-		}).
-		error(function(err){
-			$scope.workspaces = [];
-		});
+		$scope.workspaces = workspaceService.list();
 		
 		$scope.$on("user:logged", function(event, bool){
 			$scope.loggedIn = bool;

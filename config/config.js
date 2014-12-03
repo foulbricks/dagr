@@ -4,5 +4,6 @@ module.exports = {
 		development: "mongodb://localhost/dagr",
 		test: "mongodb://localhost/dagr-test"
 	},
-	workspace_limit: 5
+	workspace_limit: 5,
+	jwtSecret: "secret"
 }

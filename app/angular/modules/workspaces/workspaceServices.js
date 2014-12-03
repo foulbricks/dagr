@@ -1,7 +1,7 @@
 angular.module("Dagr.workspaces.services", []).
 
-value("WORKSPACES_ENDPOINT", "/api/users/:user/workspaces").
-value("NEW_WORKSPACE_ENDPOINT", "/api/users/:user/workspaces").
+value("WORKSPACES_ENDPOINT", "/api/users/workspaces").
+value("NEW_WORKSPACE_ENDPOINT", "/api/users/workspaces").
 
 factory("workspaceService", [
 	"$http", "authService", "WORKSPACES_ENDPOINT", "NEW_WORKSPACE_ENDPOINT",
@@ -9,7 +9,14 @@ factory("workspaceService", [
 		var workspace = {}
 		
 		workspace.list = function(){
-			return $http.get(WORKSPACES_ENDPOINT.replace(":user", authService.user.id));
+			return 
+			$http.get(WORKSPACES_ENDPOINT).
+			success(function(data){
+				return data.workspaces;
+			}).
+			error(function(err){
+				return [];
+			});
 		}
 		
 		workspace.new = function(data){
