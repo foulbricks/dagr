@@ -19,7 +19,7 @@ config([
 			}
 		}).
 		state("workspaces.index", {
-			url: "/index",
+			url: "/list",
 			controller: "WorkspaceIndex",
 			templateUrl: "/dist/modules/workspaces/views/index.html"
 		}).

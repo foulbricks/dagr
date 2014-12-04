@@ -11,6 +11,7 @@ router.param("id", function(req, res, next, id){
 		}
 		else if(workspace){
 			req.workspace = workspace;
+			next();
 		}
 		else {
 			//res.status(400).json({ error: "Workspace not found" });
@@ -102,7 +103,6 @@ router.get("/workspaces/users/suggest/:id", function(req, res){
 // List users in this workspace
 router.get("/workspaces/users/:id", function(req, res, next){
 	var workspace = req.workspace;
-	
 	User.find({_id: workspace.minions.concat(workspace.owner)}, function(err, users){
 		if(err) return next(err);
 		if(!users) return res.json({users: [] });

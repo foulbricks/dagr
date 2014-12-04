@@ -43,7 +43,7 @@ input.ng-dirty.ng-invalid{
     height: 100%;
     margin-left: -250px;
     overflow-y: auto;
-	background: #F53F39;
+	background: black;
     -webkit-transition: all 0.5s ease;
     -moz-transition: all 0.5s ease;
     -o-transition: all 0.5s ease;
@@ -98,10 +98,8 @@ input.ng-dirty.ng-invalid{
 }
 
 .sidebar-nav > .sidebar-brand {
-    height: 50px;
-    font-size: 18px;
-    line-height: 60px;
-	background: #F53F39;
+    font-size: 14px;
+	background: #2BACBA;
 }
 
 .sidebar-nav > .sidebar-brand a {

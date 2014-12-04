@@ -11,7 +11,7 @@ module.exports = function (grunt) {
 
         clean: {
 			js: ["public/dist/modules", "public/dist/views", "public/dist/assets/js", ".tmp/"],
-			css: ["public/dist/assets/css", ".tmp"]
+			css: ["public/dist/assets/css", "public/dist/assets/fonts", ".tmp"]
 		},
 
         copy: {
@@ -20,7 +20,20 @@ module.exports = function (grunt) {
                 cwd: 'app/angular',
                 src:['views/*.html', '**/**/views/*.html'],
                 dest: 'public/dist/'
-            }
+            },
+			fonts: {
+				files: [{
+					expand: true,
+					cwd: "app/assets/lib/bootstrap-sass-official/assets/fonts",
+					src: ["bootstrap/*.*"],
+					dest: "public/dist/assets/fonts"
+				}, {
+					expand: true,
+					cwd: "app/assets/lib",
+					src: ["fontawesome/fonts/*.*"],
+					dest: "public/dist/assets/fonts"
+				}]
+			}
         },
 
 		sass: {
@@ -46,6 +59,12 @@ module.exports = function (grunt) {
         usemin: {
             html: ['public/dist/views/index.html']
         },
+
+		concat: {
+			options: {
+				separator: ';',
+	    	}
+		},
 
         uglify: {
             options: {
@@ -103,7 +122,7 @@ module.exports = function (grunt) {
 
 	grunt.registerTask("buildjs", [
 		"clean:js",
-		"copy",
+		"copy:main",
 		"useminPrepare",
 		"concat",
 		"uglify",
@@ -112,6 +131,7 @@ module.exports = function (grunt) {
 	
 	grunt.registerTask("buildcss", [
 		"clean:css",
+		"copy:fonts",
 		"sass:dev",
 		"useminPrepare",
 		"concat",
