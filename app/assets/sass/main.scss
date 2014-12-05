@@ -22,6 +22,10 @@ input.ng-dirty.ng-invalid{
 	background: #fff;
 }
 
+.signin {
+	margin-top: 50px;
+}
+
 #wrapper {
     padding-left: 0;
     -webkit-transition: all 0.5s ease;
@@ -35,9 +39,9 @@ input.ng-dirty.ng-invalid{
 }
 
 #sidebar-wrapper {
-    z-index: 2000;
+    z-index: 1000;
     position: fixed;
-	top: 50px;
+	top: 51px;
     left: 250px;
     width: 0;
     height: 100%;
@@ -73,42 +77,72 @@ input.ng-dirty.ng-invalid{
     margin: 0;
     padding: 0;
     list-style: none;
+	color: #D8DACF;
+
+	a {
+	    text-decoration: none;
+		display: block;
+		width: 15%;
+		float: right;
+		text-indent: 0;
+		text-align: center;
+		cursor: pointer;
+		color: #D8DACF;
+	
+		&:hover {
+			text-decoration: none;
+		    color: #fff;
+		}
+		&:active, &:focus {
+			text-decoration: none;
+		}
+	}
 }
 
 .sidebar-nav li {
     text-indent: 20px;
-    line-height: 40px;
+    line-height: 30px;
+	
+	ul {
+		height: auto;
+		max-height: 200px;
+		overflow-x: hidden;
+
+		li > span {
+			display: block;
+			position: relative;
+			font-size: 12px;
+			line-height: 25px;
+			text-indent: 30px;
+			a {
+				display: none;
+			}
+			
+			&:hover {
+			    color: #fff;
+			    background: rgba(255,255,255,0.2);
+				a {
+					display: block;
+					background: #3C4E61;
+					margin-left: 1px;
+				}
+			}
+		}
+	}
 }
 
-.sidebar-nav li a {
-    display: block;
-    text-decoration: none;
-    color: #D8DACF;
-}
-
-.sidebar-nav li a:hover {
-    text-decoration: none;
-    color: #fff;
-    background: rgba(255,255,255,0.2);
-}
-
-.sidebar-nav li a:active,
-.sidebar-nav li a:focus {
-    text-decoration: none;
-}
-
-.sidebar-nav > .sidebar-brand {
+.sidebar-nav > li > span {
+	display: block;
+	position: relative;
     font-size: 14px;
-	background: #2BACBA;
-}
-
-.sidebar-nav > .sidebar-brand a {
-    color: #D8DACF;
-}
-
-.sidebar-nav > .sidebar-brand a:hover {
-    color: #fff;
-    background: none;
+	background: #2D3E50;
+	color: #D8DACF;
+	a {
+		background: #3C4E61;
+		&:hover {
+			color: #fff;
+		}
+	}
 }
 
 @media(min-width:768px) {
@@ -136,4 +170,8 @@ input.ng-dirty.ng-invalid{
         position: relative;
         margin-right: 0;
     }
+	
+	.navbar-header {
+		width: 180px;
+	}
 }

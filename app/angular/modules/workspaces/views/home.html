@@ -1,37 +1,36 @@
-<div class="row">
-	<div class="col-xs-3 border-left">
-	    <div id="sidebar-wrapper">
-	        <ul class="sidebar-nav">
-	            <li class="sidebar-brand">
-	                <a href="#">
-	                    People
-	                </a>
-	            </li>
-	            <li>
-	                <a href="#">Dashboard</a>
-	            </li>
-	            <li>
-	                <a href="#">Shortcuts</a>
-	            </li>
-	            <li>
-	                <a href="#">Overview</a>
-	            </li>
-	            <li>
-	                <a href="#">Events</a>
-	            </li>
-	            <li>
-	                <a href="#">About</a>
-	            </li>
-	            <li>
-	                <a href="#">Services</a>
-	            </li>
-	            <li>
-	                <a href="#">Contact</a>
-	            </li>
-	        </ul>
-	    </div>
-	</div>
-	<div class="col-xs-9 border-left">
-	    <div ui-view></div>
-	</div>
+<div id="wrapper">
+    <div id="sidebar-wrapper">
+        <ul class="sidebar-nav">
+            <li>
+				<span>People ({{ people.length }})
+					<a href-"#" data-toggle="tooltip" data-placement="right" title="Tooltip on left"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
+				</span>
+				<ul class="list-unstyled">
+		            <li ng-repeat="person in people">
+						<span>{{ person.name.first }} {{ person.name.last }}
+							<a href-"#"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span></a>
+							<a href-"#"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span></a>
+						</span>
+		            </li>
+				</ul>
+            </li>
+			<li>
+				<span>Projects ({{ projects.length }})
+					<a href-"#" data-toggle="tooltip" data-placement="right" title="Tooltip on left"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
+				</span>
+				<ul class="list-unstyled">
+		            <li ng-repeat="project in projects">
+						<span>{{ project.name }}
+							
+						</span>
+		            </li>
+				</ul>
+            </li>
+        </ul>
+    </div>
+    <div id="page-content-wrapper">
+        <div class="container-fluid">
+			<div ui-view></div>
+        </div>
+    </div>
 </div>

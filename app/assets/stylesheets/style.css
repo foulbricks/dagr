@@ -8992,6 +8992,10 @@ input.ng-dirty.ng-invalid {
   background: #fff;
 }
 
+.signin {
+  margin-top: 50px;
+}
+
 #wrapper {
   padding-left: 0;
   -webkit-transition: all 0.5s ease;
@@ -9005,9 +9009,9 @@ input.ng-dirty.ng-invalid {
 }
 
 #sidebar-wrapper {
-  z-index: 2000;
+  z-index: 1000;
   position: fixed;
-  top: 50px;
+  top: 51px;
   left: 250px;
   width: 0;
   height: 100%;
@@ -9042,42 +9046,67 @@ input.ng-dirty.ng-invalid {
   margin: 0;
   padding: 0;
   list-style: none;
+  color: #D8DACF;
+}
+.sidebar-nav a {
+  text-decoration: none;
+  display: block;
+  width: 15%;
+  float: right;
+  text-indent: 0;
+  text-align: center;
+  cursor: pointer;
+  color: #D8DACF;
+}
+.sidebar-nav a:hover {
+  text-decoration: none;
+  color: #fff;
+}
+.sidebar-nav a:active, .sidebar-nav a:focus {
+  text-decoration: none;
 }
 
 .sidebar-nav li {
   text-indent: 20px;
-  line-height: 40px;
+  line-height: 30px;
 }
-
-.sidebar-nav li a {
+.sidebar-nav li ul {
+  height: auto;
+  max-height: 200px;
+  overflow-x: hidden;
+}
+.sidebar-nav li ul li > span {
   display: block;
-  text-decoration: none;
-  color: #D8DACF;
+  position: relative;
+  font-size: 12px;
+  line-height: 25px;
+  text-indent: 30px;
 }
-
-.sidebar-nav li a:hover {
-  text-decoration: none;
+.sidebar-nav li ul li > span a {
+  display: none;
+}
+.sidebar-nav li ul li > span:hover {
   color: #fff;
   background: rgba(255, 255, 255, 0.2);
 }
-
-.sidebar-nav li a:active,
-.sidebar-nav li a:focus {
-  text-decoration: none;
+.sidebar-nav li ul li > span:hover a {
+  display: block;
+  background: #3C4E61;
+  margin-left: 1px;
 }
 
-.sidebar-nav > .sidebar-brand {
+.sidebar-nav > li > span {
+  display: block;
+  position: relative;
   font-size: 14px;
-  background: #2BACBA;
-}
-
-.sidebar-nav > .sidebar-brand a {
+  background: #2D3E50;
   color: #D8DACF;
 }
-
-.sidebar-nav > .sidebar-brand a:hover {
+.sidebar-nav > li > span a {
+  background: #3C4E61;
+}
+.sidebar-nav > li > span a:hover {
   color: #fff;
-  background: none;
 }
 
 @media (min-width: 768px) {
@@ -9104,6 +9133,10 @@ input.ng-dirty.ng-invalid {
   #wrapper.toggled #page-content-wrapper {
     position: relative;
     margin-right: 0;
+  }
+
+  .navbar-header {
+    width: 180px;
   }
 }
 

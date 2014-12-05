@@ -29,8 +29,8 @@ module.exports = function (grunt) {
 					dest: "public/dist/assets/fonts"
 				}, {
 					expand: true,
-					cwd: "app/assets/lib",
-					src: ["fontawesome/fonts/*.*"],
+					cwd: "app/assets/lib/fontawesome/fonts",
+					src: ["*.*"],
 					dest: "public/dist/assets/fonts"
 				}]
 			}

@@ -1,23 +1,31 @@
 angular.module("Dagr").
 
 controller("NavController", [
-	"$scope", "authService", "workspaceService",
-	function($scope, authService, workspaceService){
+	"$rootScope", "$scope", "authService", "workspaceService",
+	function($rootScope, $scope, authService, workspaceService){
 		$scope.loggedIn = authService.token !== undefined;
 		$scope.name = authService.user && [authService.user.name.first, authService.user.name.last].join(" ") || "Stranger";
-		
-		workspaceService.list().success(function(data){
-			$scope.workspaces = data.workspaces;
-		}).
-		error(function(err){
-			$scope.workspaces = [];
-		});
+		$scope.workspaces = [];
+		getWorkspaceList();
 		
 		$scope.$on("user:logged", function(event, bool){
 			$scope.loggedIn = bool;
 			if(bool){
 				$scope.name = [authService.user.name.first, authService.user.name.last].join(" ");
 			}
+			getWorkspaceList();
 		});
+		
+		function getWorkspaceList(){
+			workspaceService.list().success(function(data){
+				$scope.workspaces = data.workspaces;
+				if(data.workspaces.length > 0){
+					$rootScope.$broadcast("workspace:change", data.workspaces[0]);
+				}
+			}).
+			error(function(err){
+				$scope.workspaces = [];
+			});
+		}
 	}
 ]);
