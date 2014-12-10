@@ -34,6 +34,7 @@ controller("WorkspaceIndex", [
 controller("WorkspaceNew", [
 	"$scope", "workspaceService", "$state",
 	function($scope, workspaceService, $state){
+		$scope.potentialUsers = [];
 		
 		$scope.newWorkspace = function(){
 			workspaceService.new({workspace: $scope.workspace}).
@@ -45,6 +46,11 @@ controller("WorkspaceNew", [
 				$scope.invalid = true;
 			});
 		}
+		
+		workspaceService.suggestions().
+		success(function(data){
+			$scope.potentialUsers = data.users;
+		});
 		
 	}
 ])

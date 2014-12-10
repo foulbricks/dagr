@@ -4,6 +4,7 @@ controller("NavController", [
 	"$rootScope", "$scope", "authService", "workspaceService",
 	function($rootScope, $scope, authService, workspaceService){
 		$scope.loggedIn = authService.token !== undefined;
+		$scope.user = authService.user;
 		$scope.name = authService.user && [authService.user.name.first, authService.user.name.last].join(" ") || "Stranger";
 		$scope.workspaces = [];
 		getWorkspaceList();

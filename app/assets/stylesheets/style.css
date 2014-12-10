@@ -8996,6 +8996,41 @@ input.ng-dirty.ng-invalid {
   margin-top: 50px;
 }
 
+.user-box {
+  position: relative;
+  border: 1px solid #E7E7E7;
+  padding: 20px !important;
+  margin: 20px 0 !important;
+  background-color: #F8F8F8;
+}
+.user-box label {
+  position: relative;
+  display: block;
+  width: 100%;
+}
+.user-box label strong {
+  font-size: 20px;
+  float: left;
+}
+.user-box label small {
+  float: left;
+  padding: 5px 15px;
+}
+.user-box label span {
+  display: block;
+  position: absolute;
+  right: 50px;
+}
+.user-box label input {
+  position: absolute;
+  right: 20px;
+}
+
+@media (min-width: 768px) {
+  .navbar-header {
+    width: 180px;
+  }
+}
 #wrapper {
   padding-left: 0;
   -webkit-transition: all 0.5s ease;
@@ -9133,10 +9168,6 @@ input.ng-dirty.ng-invalid {
   #wrapper.toggled #page-content-wrapper {
     position: relative;
     margin-right: 0;
-  }
-
-  .navbar-header {
-    width: 180px;
   }
 }
 

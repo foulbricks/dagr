@@ -84,11 +84,11 @@ router.delete("/users/workspaces/:id", function(req, res){
 });
 
 // Suggest users who might be interested in this workspace
-router.get("/workspaces/users/suggest/:id", function(req, res){
-	var workspace = req.workspace;
+router.get("/workspaces/users/suggest", function(req, res, next){
+	var id = req.user.id;
 	var emailDomain = req.user.email.split("@").reverse()[0];
 	if(emailDomain){
-		User.find({email: new RegExp(emailDomain, "i")}, function(err, users){
+		User.find({email: new RegExp(emailDomain, "i"), _id: {$ne: id} }, function(err, users){
 			if(err) return next(err);
 			if(!users) return res.json({users: [] });
 			

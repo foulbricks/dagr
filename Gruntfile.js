@@ -69,18 +69,20 @@ module.exports = function (grunt) {
         uglify: {
             options: {
                 report: 'min',
-                mangle: true
+                mangle: true,
+				sourceMap: true
             }
         },
 
 		watch: {
 			scripts: {
-				files: ["app/angular/**.js"],
-				tasks: ["buildjs"],
-				options: {
-					spawn: false
-				}
+				files: ["app/angular/**.js", "app/angular/modules/**/*.js", 'app/angular/views/*.html', 'app/angular/**/**/views/*.html'],
+				tasks: ["buildjs"]
 			},
+			// html: {
+			// 	files: ['app/angular/views/*.html', 'app/angular/**/**/views/*.html'],
+			// 	tasks: ["copy:main"]
+			// },
 			sass: {
 				files: '<%= project.assets %>/sass/{,*/}*.{scss,sass}',
 				tasks: ["buildcss"]
