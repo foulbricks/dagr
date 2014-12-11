@@ -85,7 +85,8 @@ userSchema.method("toJSON", function(){
 			last: user.name.last
 		},
 		email: user.email,
-		title: user.title
+		title: user.title,
+		invites: user.workspaceInvites
 	}
 });
 

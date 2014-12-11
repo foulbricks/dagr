@@ -22,6 +22,7 @@ controller("NavController", [
 				$scope.workspaces = data.workspaces;
 				if(data.workspaces.length > 0){
 					$rootScope.$broadcast("workspace:change", data.workspaces[0]);
+					$window.localStorage.workspace = JSON.stringify(data.workspaces[0]);
 				}
 			}).
 			error(function(err){

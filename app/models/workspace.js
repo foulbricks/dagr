@@ -34,6 +34,10 @@ workspaceSchema.path("name").validate(function(name, respond){
 	);
 });
 
+workspaceSchema.static("userIsMember", function(workspace, userId){
+	return workspace.owner == userId || workspace.minions.indexOf(userId) > -1;
+});
+
 // Overwrite toJSON
 workspaceSchema.method("toJSON", function(){
 	var workspace = this;

@@ -27,6 +27,21 @@ config([
 			url: "/new",
 			controller: "WorkspaceNew",
 			templateUrl: "/dist/modules/workspaces/views/new.html"
+		}).
+		state("workspaces.invite", {
+			url: "/invite",
+			controller: "WorkspaceInvite",
+			templateUrl: "/dist/modules/workspaces/views/invites.html"
+		}).
+		state("workspaces.delete", {
+			url: "/delete",
+			controller: "WorkspaceDestroy",
+			templateUrl: "/dist/modules/workspaces/views/destroy.html"
+		}).
+		state("workspaces.deleteMembers", {
+			url: "/delete-members",
+			controller: "WorkspaceDeleteMembers",
+			templateUrl: "/dist/modules/worskpaces/views/delete_members.html"
 		});
 	}
 ]).

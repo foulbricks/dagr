@@ -1,6 +1,7 @@
 var express = require("express");
 var router = express.Router();
 var utils = require("./lib/utils");
+var helper = require("./lib/workspaceHelper");
 var Workspace = require("../models/workspace");
 var User = require("../models/user");
 
@@ -32,16 +33,29 @@ router.get("/users/workspaces", function(req, res, next){
 });
 
 // Process new workspace
-router.post("/users/workspaces", function(req, res){
+router.post("/users/workspaces", function(req, res, next){
 	var data = req.body.workspace;
 	var workspace = new Workspace({
 		name: data.name,
 		owner: req.user.id,
-		minions: data.minions || []
+		minions: []
 	});
 	
 	workspace.save(function(err, saved){
 		if(!err){
+			// Set invitations for users
+			if(data.users){
+				User.find({_id: data.users}, function(err, users){
+					helper.processInvites(err, users, saved, next)
+				});
+			}
+			if(data.emails){
+				emails = data.emails.split(/\s?,\s?/);
+				User.find({email: emails}, function(err, users){
+					helper.processInvites(err, users, saved, next)
+				});
+				// TODO: SEND EMAIL TO JOIN SITE IF EMAIL NOT FOUND
+			}
 			res.json({ status: true, errors: null });
 		}
 		else {
@@ -52,7 +66,9 @@ router.post("/users/workspaces", function(req, res){
 
 // List one workspace
 router.get("/users/workspaces/:id", function(req, res, next){
-	res.json({ workspace: req.workspace });
+	if(Workspace.userIsMember(req.workspace, req.user.id)){
+		res.json({ workspace: req.workspace });
+	}
 });
 
 // Update workspace
@@ -60,37 +76,70 @@ router.put("/users/workspaces/:id", function(req, res){
 	var data = req.body.workspace;
 	var workspace = req.workspace;
 	
-	workspace.name = data.name || workspace.name;
-	workspace.minions = data.minions || workspace.minions;
+	if(workspace.owner == req.user.id){
+		workspace.name = data.name || workspace.name;
 	
-	workspace.save(function(err, saved){
-		if(!err){
-			res.json({ status: true, errors: null });
-		}
-		else {
-			res.status(400).json({ status: false, error: utils.errorList(err) });
-		}
-	});
+		workspace.save(function(err, saved){
+			if(!err){
+				res.json({ status: true, errors: null });
+			}
+			else {
+				res.status(400).json({ status: false, error: utils.errorList(err) });
+			}
+		});
+	}
+	else {
+		res.status(400).json({error: "You need to be the owner"});
+	}
 });
 
 // Delete workspace
-router.delete("/users/workspaces/:id", function(req, res){
+router.delete("/users/workspaces/:id", function(req, res, next){
 	var workspace = req.workspace;
 	
-	workspace.remove(function(err){
-		if(err) return next(err);
-		res.json({ status: true });
-	});
+	if(workspace.owner == req.user.id){
+		workspace.remove(function(err){
+			if(err) return next(err);
+			res.json({ status: true });
+		});
+	}
+	else {
+		res.status(400).json({error: "You need to be the owner"});
+	}
 });
 
 // Suggest users who might be interested in this workspace
-router.get("/workspaces/users/suggest", function(req, res, next){
-	var id = req.user.id;
+router.get("/workspaces/users/suggest/:id?", function(req, res, next){
+	var exclude = [req.user.id];
+	var workspace = req.workspace;
+	
+	console.log(workspace)
+	if(workspace){ // Don't suggest owner or their minions
+		exclude.push(workspace.owner);
+		workspace.minions.forEach(function(minion){
+			exclude.push(minion);
+		});
+	}
+	
 	var emailDomain = req.user.email.split("@").reverse()[0];
 	if(emailDomain){
-		User.find({email: new RegExp(emailDomain, "i"), _id: {$ne: id} }, function(err, users){
+		User.find({email: new RegExp(emailDomain, "i"), _id: {$nin: exclude} }, function(err, users){
 			if(err) return next(err);
 			if(!users) return res.json({users: [] });
+			
+			console.log(workspace)
+			if(workspace){ // Remove pending invites from list
+				var usersCopy = users.slice(0);
+				console.log(usersCopy)
+				usersCopy.forEach(function(user, index){
+					console.log(user)
+					console.log(user.workspaceInvites.indexOf(workspace.id))
+					if(user.workspaceInvites.indexOf(workspace.id) > -1){
+						console.log('hi');
+						users.slice(index, 1);
+					}
+				});
+			}
 			
 			res.json({users: users});
 		});
@@ -103,56 +152,90 @@ router.get("/workspaces/users/suggest", function(req, res, next){
 // List users in this workspace
 router.get("/workspaces/users/:id", function(req, res, next){
 	var workspace = req.workspace;
-	User.find({_id: workspace.minions.concat(workspace.owner)}, function(err, users){
-		if(err) return next(err);
-		if(!users) return res.json({users: [] });
+	if(Workspace.userIsMember(workspace, req.user.id)){
+		User.find({_id: workspace.minions.concat(workspace.owner)}, function(err, users){
+			if(err) return next(err);
+			if(!users) return res.json({users: [] });
 		
-		res.json({users: users});
-	});
+			res.json({users: users});
+		});
+	}
 });
 
 // Join workspace after invite
 router.post("/users/workspaces/join/:id", function(req, res, next){
-	var workspace = req.workspace;
-	workspace.minions.push(req.user.id);
-	
-	workspace.save(function(err){
-		if(err) return res.status(400).json({ status: false, error: utils.errorList(err) });
+	User.findById(req.user.id, function(err, user){
+		if(err) return next(err);
+		if(!user) return res.status(400).json({ error: "User not found" });
 		
-		User.findById(req.user.id, function(err, user){
-			if(err) return next(err);
-			if(!user) return res.status(400).json({ error: "User not found" });
-			
-			var index = user.workspaceInvites.indexOf(workspace.id);
-			if(index) user.workspaceInvites.splice(index, 1);
-			
-			user.save(function(err){
+		var workspace = req.workspace;
+		var index = user.workspaceInvites.indexOf(workspace.id);
+		
+		if(index > -1){
+			workspace.minions.push(req.user.id);
+	
+			workspace.save(function(err){
 				if(err) return res.status(400).json({ status: false, error: utils.errorList(err) });
-				res.json({status: true});
-			});
 			
-		});
+				user.workspaceInvites.splice(index, 1);
+			
+				user.save(function(err){
+					if(err) return res.status(400).json({ status: false, error: utils.errorList(err) });
+					res.json({status: true});
+				});
+			});
+		}
+		else {
+			res.status(400).json({error: "Can't join without being invited!"});
+		}
 	});
 });
 
-// Add an invitation to join a workspace to another user
-router.post("/users/:user/workspaces/invite/:id", function(req, res, next){
+// Add an invitation to join after workspace is created
+router.post("/users/workspaces/invite/:id", function(req, res, next){
 	var workspace = req.workspace;
 	
-	if(workspace.owner != req.user.id){
-		res.status(400).json({ error: "Cannot process invite. You are not the owner"});
+	if(Workspace.userIsMember(workspace, req.user.id)) {
+		var data = req.body.workspace;
+		if(data.users){
+			User.find({_id: data.users}, function(err, users){
+				helper.processInvites(err, users, workspace, next);
+			});
+		}
+		if(data.emails){
+			emails = data.emails.split(/\s?,\s?/);
+			User.find({email: emails}, function(err, users){
+				helper.processInvites(err, users, workspace, next);
+			});
+			// TODO: SEND EMAIL TO JOIN SITE IF EMAIL NOT FOUND
+		}
+		res.json({status: true});
+	}
+});
+
+router.put("/users/:user/workspaces/delete/:id", function(req, res, next){
+	var workspace = req.workspace;
+	
+	if(workspace.owner == req.user.id){
+		User.findById(req.params.user, function(err, user){
+			if(err) return next(err);
+			if(user){
+				var index = workspace.minions.indexOf(user.id);
+				if(index > -1){
+					workspace.minions.slice(index, 1);
+					workspace.save(function(err){
+						if(err) return next(err);
+						res.json({ status: true });
+					});
+				}
+			}
+			else {
+				res.json({ status: true });
+			}
+		});
 	}
 	else {
-		User.findById(req.params.id, function(err, user){
-			if(err) return next(err);
-			if(!user) return res.status(400).json({error: "User not found"});
-			
-			user.workspaceInvites.push(workspace.id);
-			user.save(function(err){
-				if(err) return res.status(400).json({ status: false, error: utils.errorList(err) });
-				res.json({status: true});
-			});
-		});
+		res.status(400).json({error: "You need to be the owner"});
 	}
 });
 

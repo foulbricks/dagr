@@ -13,6 +13,7 @@ controller("WorkspaceController", [
 			error(function(err){
 				$scope.people = []
 			});
+			$scope.workspaceRef = workspace;
 		});
 	}
 ]).
@@ -35,16 +36,23 @@ controller("WorkspaceNew", [
 	"$scope", "workspaceService", "$state",
 	function($scope, workspaceService, $state){
 		$scope.potentialUsers = [];
+		$scope.invites = [];
 		
 		$scope.newWorkspace = function(){
+			$scope.workspace.users = $scope.invites;
 			workspaceService.new({workspace: $scope.workspace}).
 			success(function(data){
 				$state.go("workspaces.index");
 			}).
 			error(function(err){
-				$scope.errors = err.errors;
+				$scope.errors = err.error;
 				$scope.invalid = true;
 			});
+		}
+		
+		$scope.toggleInvites = function(id){
+			var index = $scope.invites.indexOf(id);
+			index > -1 ? $scope.invites.splice(index, 1) : $scope.invites.push(id); 
 		}
 		
 		workspaceService.suggestions().
@@ -53,4 +61,48 @@ controller("WorkspaceNew", [
 		});
 		
 	}
-])
+]).
+
+controller("WorkspaceInvite", [
+	"$scope", "workspaceService", "$state",
+	function($scope, workspaceService, $state){
+		$scope.potentialUsers = [];
+		$scope.invites = [];
+		$scope.workspace = {};
+		$scope.toggleInvites = function(id){
+			var index = $scope.invites.indexOf(id);
+			index > -1 ? $scope.invites.splice(index, 1) : $scope.invites.push(id); 
+		}
+		console.log($scope.workspaceRef)
+		$scope.inviteWorkspace = function(){
+			$scope.workspace.users = $scope.invites;
+			workspaceService.invite({workspace: $scope.workspace}, $scope.workspaceRef.id).
+			success(function(data){
+				$state.go("workspaces.index");
+			}).
+			error(function(err){
+				$scope.errors = err.error;
+				$scope.invalid = true;
+			});
+		}
+		
+		workspaceService.suggestions().
+		success(function(data){
+			$scope.potentialUsers = data.users;
+		});
+	}
+]).
+
+controller("WorkspaceDestroy", [
+	"$scope", "workspaceService", "$state",
+	function($scope, workspaceService, $state){
+		
+	}
+]).
+
+controller("WorkspaceDeleteMembers", [
+	"$scope", "workspaceService", "$state",
+	function($scope, workspaceService, $state){
+		
+	}
+]);
