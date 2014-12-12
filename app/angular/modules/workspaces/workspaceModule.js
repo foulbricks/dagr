@@ -47,8 +47,8 @@ config([
 ]).
 
 run([
-	"$rootScope", "$state", "$window", "authService",
-	function($rootScope, $state, $window, authService){
+	"$rootScope", "$state", "$window", "workspaceService", "authService",
+	function($rootScope, $state, $window, workspaceService, authService){
 		$rootScope.$on("$stateChangeError", 
 			function(event, toState, toParams, fromState, toParams, error){
 				if(error.unauthorized){
@@ -57,6 +57,7 @@ run([
 			}
 		);
 		authService.user = $window.localStorage.user && JSON.parse($window.localStorage.user);
+		workspaceService.main = $window.localStorage.workspace && JSON.parse($window.localStorage.workspace);
 		authService.token = $window.sessionStorage.token;
 	}
 ]);

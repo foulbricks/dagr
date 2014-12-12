@@ -16,8 +16,6 @@ factory("workspaceService", [
 		WS_INVITE_PATH, WS_DELETE_PATH, WS_JOIN_PATH, WS_DELETE_MEMBER_PATH){
 		var workspace = {}
 		
-		workspace.self = {};
-		
 		workspace.list = function(){
 			return $http.get(WS_LIST_PATH);
 		}

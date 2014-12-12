@@ -80,10 +80,7 @@ userSchema.method("toJSON", function(){
 	var user = this;
 	return {
 		id: user.id,
-		name: {
-			first: user.name.first,
-			last: user.name.last
-		},
+		name: [user.name.first, user.name.last].join(" "),
 		email: user.email,
 		title: user.title,
 		invites: user.workspaceInvites

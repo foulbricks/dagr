@@ -6,15 +6,23 @@ controller("WorkspaceController", [
 		$scope.people = [];
 		$scope.projects = [];
 		
-		$scope.$on("workspace:change", function(event, workspace){
-			workspaceService.people(workspace.id).success(function(data){
-				$scope.people = data.users
-			}).
-			error(function(err){
-				$scope.people = []
-			});
-			$scope.workspaceRef = workspace;
-		});
+		$scope.$watch(
+			function(){
+				return workspaceService.main;
+			},
+			function(newVal){
+				if(newVal){
+					$scope.workspace = newVal;
+					workspaceService.people($scope.workspace.id).
+					success(function(data){
+						$scope.people = data.users
+					}).
+					error(function(err){
+						$scope.people = []
+					});
+				}
+			}
+		);
 	}
 ]).
 

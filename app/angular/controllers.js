@@ -1,28 +1,50 @@
 angular.module("Dagr").
 
 controller("NavController", [
-	"$rootScope", "$scope", "authService", "workspaceService",
-	function($rootScope, $scope, authService, workspaceService){
-		$scope.loggedIn = authService.token !== undefined;
+	"$rootScope", "$window", "$scope", "authService", "workspaceService",
+	function($rootScope, $window, $scope, authService, workspaceService){
+		$scope.loggedIn = false;
 		$scope.user = authService.user;
-		$scope.name = authService.user && [authService.user.name.first, authService.user.name.last].join(" ") || "Stranger";
+		$scope.name = authService.user ? authService.user.name : "Stranger";
 		$scope.workspaces = [];
 		getWorkspaceList();
 		
-		$scope.$on("user:logged", function(event, bool){
-			$scope.loggedIn = bool;
-			if(bool){
-				$scope.name = [authService.user.name.first, authService.user.name.last].join(" ");
+		$scope.$watch(
+			function(){
+				return authService.user;
+			}, function(newVal){
+				if(newVal){
+					$scope.loggedIn = true;
+					$scope.name = authService.user.name;
+					getWorkspaceList();
+				}
+				else {
+					$scope.loggedIn = false;
+				}
 			}
-			getWorkspaceList();
-		});
+		);
+		
+		$scope.changeWorkspace = function(id){
+			var ids = $scope.workspaces.map(function(w){ return w.id });
+			var index = ids.indexOf(id);
+			var main = $scope.workspaces.splice(index, 1, $scope.mainWorkspace);
+			$scope.mainWorkspace = workspaceService.main = main[0];
+			$window.localStorage.workspace = JSON.stringify(main[0]);
+		}
 		
 		function getWorkspaceList(){
 			workspaceService.list().success(function(data){
-				$scope.workspaces = data.workspaces;
-				if(data.workspaces.length > 0){
-					$rootScope.$broadcast("workspace:change", data.workspaces[0]);
-					$window.localStorage.workspace = JSON.stringify(data.workspaces[0]);
+				if(data.workspaces){
+					workspaceService.main = workspaceService.main || data.workspaces[0];
+					$window.localStorage.workspace = JSON.stringify(workspaceService.main);
+					$scope.mainWorkspace = workspaceService.main;
+					
+					if(data.workspaces.length > 1){
+						var ids = data.workspaces.map(function(w){ return w.id });
+						var index = ids.indexOf(workspaceService.main.id);
+						data.workspaces.splice(index, 1);
+					}
+					$scope.workspaces = data.workspaces;
 				}
 			}).
 			error(function(err){

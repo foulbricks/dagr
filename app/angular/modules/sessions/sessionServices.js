@@ -14,7 +14,6 @@ factory("authService", [
 					success(function(data, status){
 						auth.token = data.token;
 						auth.user = data.user;
-						$rootScope.$broadcast("user:logged", true);
 						$window.localStorage.user = JSON.stringify(auth.user);
 						$window.sessionStorage.token = auth.token;
 						return data.token;
