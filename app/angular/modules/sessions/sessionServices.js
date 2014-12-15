@@ -3,8 +3,8 @@ angular.module("Dagr.sessions.services", []).
 value("LOGIN_ENDPOINT", "/api/login").
 
 factory("authService", [
-	"$rootScope", "$http", "$window", "LOGIN_ENDPOINT",
-	function($rootScope, $http, $window, LOGIN_ENDPOINT){
+	"$rootScope", "$http", "$window", "LOGIN_ENDPOINT", "workspaceService",
+	function($rootScope, $http, $window, LOGIN_ENDPOINT, workspaceService){
 		var auth = {};
 		
 		auth.login = function(email, password){
@@ -29,9 +29,10 @@ factory("authService", [
 		auth.logout = function(){
 			auth.token = undefined;
 			auth.user = undefined;
+			workspaceService.main = undefined;
 			delete $window.localStorage.user;
 			delete $window.sessionStorage.token;
-			$rootScope.$broadcast("user:logged", false);
+			delete $window.localStorage.workspace;
 		}
 						
 		return auth;

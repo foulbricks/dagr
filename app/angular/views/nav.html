@@ -28,14 +28,11 @@
 					<span class="icon-bar"></span>
 				</button>
 				<ul class="nav navbar-nav col-xs-6 col-sm-12" ng-if="workspaces.length > 0">
-					<li class="dropdown" ng-if="workspaces.length > 1">
+					<li class="dropdown" ng-if="mainWorkspace">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{ mainWorkspace.name }}<span class="caret"></span></a>
-						<ul class="dropdown-menu" role="menu">
+						<ul class="dropdown-menu" role="menu" ng-if="workspaces">
 							<li ng-repeat="w in workspaces"><a href="#" ng-click="changeWorkspace(w.id)">{{ w.name }}</a></li>
 						</ul>
-					</li>
-					<li ng-if="workspaces.length == 1">
-						<a href="#">{{ mainWorkspace.name }}</a>
 					</li>
 				</ul>
 			</div>

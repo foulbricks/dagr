@@ -3,7 +3,7 @@
 		<h4 class="text-center">Invite users in your domain</h4>
 		<div class="checkbox user-box" ng-repeat="user in potentialUsers">
 			<label>
-				<strong>{{ user.name.first }} {{ user.name.last }}</strong>
+				<strong>{{ user.name }}</strong>
 				<small class="hidden-sm hidden-xs">({{ user.email }})</small>
 				<span>{{ user.title }}</span>
 				<input type="checkbox" ng-value="user.id" ng-click="toggleInvites(user.id)"/>

@@ -28,6 +28,11 @@ config([
 			controller: "WorkspaceNew",
 			templateUrl: "/dist/modules/workspaces/views/new.html"
 		}).
+		state("workspaces.manageInvites", {
+			url: "/manage-invitations",
+			controller: "WorkspaceManageInvitations",
+			templateUrl: "/dist/modules/workspaces/views/manageInvitations.html"
+		}).
 		state("workspaces.invite", {
 			url: "/invite",
 			controller: "WorkspaceInvite",

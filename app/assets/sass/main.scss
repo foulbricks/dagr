@@ -57,6 +57,29 @@ input.ng-dirty.ng-invalid{
 	}
 }
 
+.workspace-box {
+	position: relative;
+	border: 1px solid #E7E7E7;
+	padding: 20px !important;
+	margin: 20px 0 !important;
+	background-color: #F8F8F8;
+	.actions {
+		display: block;
+		position: absolute;
+		top: 15px;
+		right: 30px;
+		a {
+			margin-left: 30px;
+		}
+		.join {
+			color: #3C763D;
+		}
+		.dismiss {
+			color: #A94442;
+		}
+	}
+}
+
 @media(min-width:768px) {
 	.navbar-header {
 		width: 180px;

@@ -1,5 +1,8 @@
 <div class="row"> 
 	<div class="col-sm-12">
+		<div class="alert alert-danger" ng-if="user.invites.length > 0">
+			You currently have {{ user.invites.length }} invitations to join a workspace. <a ui-sref="workspaces.manageInvites">Manage the queue.</a> 
+		</div>
 		<div ng-if="workspaces.length < 1">
 			<p class="h4">You do not have any workspaces associated with your account!</p>
 			<p><a ui-sref="workspaces.new"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Create a new workspace</a></p>

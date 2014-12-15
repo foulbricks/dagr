@@ -9026,6 +9026,29 @@ input.ng-dirty.ng-invalid {
   right: 20px;
 }
 
+.workspace-box {
+  position: relative;
+  border: 1px solid #E7E7E7;
+  padding: 20px !important;
+  margin: 20px 0 !important;
+  background-color: #F8F8F8;
+}
+.workspace-box .actions {
+  display: block;
+  position: absolute;
+  top: 15px;
+  right: 30px;
+}
+.workspace-box .actions a {
+  margin-left: 30px;
+}
+.workspace-box .actions .join {
+  color: #3C763D;
+}
+.workspace-box .actions .dismiss {
+  color: #A94442;
+}
+
 @media (min-width: 768px) {
   .navbar-header {
     width: 180px;

@@ -12,8 +12,8 @@ controller("WorkspaceController", [
 			},
 			function(newVal){
 				if(newVal){
-					$scope.workspace = newVal;
-					workspaceService.people($scope.workspace.id).
+					$scope.mainWorkspace = newVal;
+					workspaceService.people($scope.mainWorkspace.id).
 					success(function(data){
 						$scope.people = data.users
 					}).
@@ -27,9 +27,17 @@ controller("WorkspaceController", [
 ]).
 
 controller("WorkspaceIndex", [
-	"$scope", "workspaceService",
-	function($scope, workspaceService){
+	"$scope", "workspaceService", "authService",
+	function($scope, workspaceService, authService){
 		$scope.workspaces = []
+		$scope.$watch(
+			function(){
+				return authService.user;
+			},
+			function(newVal){
+				$scope.user = newVal;
+			}
+		);
 		
 		workspaceService.list().success(function(data){
 			$scope.workspaces = data.workspaces;
@@ -76,15 +84,16 @@ controller("WorkspaceInvite", [
 	function($scope, workspaceService, $state){
 		$scope.potentialUsers = [];
 		$scope.invites = [];
-		$scope.workspace = {};
+		$scope.workspace = {}
+		
 		$scope.toggleInvites = function(id){
 			var index = $scope.invites.indexOf(id);
 			index > -1 ? $scope.invites.splice(index, 1) : $scope.invites.push(id); 
 		}
-		console.log($scope.workspaceRef)
+
 		$scope.inviteWorkspace = function(){
 			$scope.workspace.users = $scope.invites;
-			workspaceService.invite({workspace: $scope.workspace}, $scope.workspaceRef.id).
+			workspaceService.invite({workspace: $scope.workspace}, $scope.mainWorkspace.id).
 			success(function(data){
 				$state.go("workspaces.index");
 			}).
@@ -94,10 +103,19 @@ controller("WorkspaceInvite", [
 			});
 		}
 		
-		workspaceService.suggestions().
-		success(function(data){
-			$scope.potentialUsers = data.users;
-		});
+		$scope.$watch(
+			function(){
+				return workspaceService.main;
+			},
+			function(newVal){
+				if(newVal){
+					workspaceService.suggestions(newVal.id).
+					success(function(data){
+						$scope.potentialUsers = data.users;
+					});
+				}
+			}
+		);
 	}
 ]).
 
@@ -112,5 +130,25 @@ controller("WorkspaceDeleteMembers", [
 	"$scope", "workspaceService", "$state",
 	function($scope, workspaceService, $state){
 		
+	}
+]).
+
+controller("WorkspaceManageInvitations", [
+	"$scope", "workspaceService", "$state", "authService",
+	function($scope, workspaceService, $state, authService){
+		$scope.workspaces = [];
+		
+		$scope.$watch(function(){
+			return authService.user;
+		}, function(user){
+			if(user && user.invites){
+				user.invites.map(function(id){
+					workspaceService.show(id).
+					success(function(workspace){
+						$scope.workspaces.push(workspace.workspace);
+					});
+				});
+			}
+		});
 	}
 ]);

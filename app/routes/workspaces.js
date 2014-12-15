@@ -66,7 +66,7 @@ router.post("/users/workspaces", function(req, res, next){
 
 // List one workspace
 router.get("/users/workspaces/:id", function(req, res, next){
-	if(Workspace.userIsMember(req.workspace, req.user.id)){
+	if(Workspace.userIsMember(req.workspace, req.user.id) || req.user.invites.indexOf(req.workspace.id) > -1){
 		res.json({ workspace: req.workspace });
 	}
 });
@@ -113,7 +113,6 @@ router.get("/workspaces/users/suggest/:id?", function(req, res, next){
 	var exclude = [req.user.id];
 	var workspace = req.workspace;
 	
-	console.log(workspace)
 	if(workspace){ // Don't suggest owner or their minions
 		exclude.push(workspace.owner);
 		workspace.minions.forEach(function(minion){
@@ -127,16 +126,12 @@ router.get("/workspaces/users/suggest/:id?", function(req, res, next){
 			if(err) return next(err);
 			if(!users) return res.json({users: [] });
 			
-			console.log(workspace)
+			console.log(exclude)
 			if(workspace){ // Remove pending invites from list
 				var usersCopy = users.slice(0);
-				console.log(usersCopy)
 				usersCopy.forEach(function(user, index){
-					console.log(user)
-					console.log(user.workspaceInvites.indexOf(workspace.id))
 					if(user.workspaceInvites.indexOf(workspace.id) > -1){
-						console.log('hi');
-						users.slice(index, 1);
+						users.splice(index, 1);
 					}
 				});
 			}
