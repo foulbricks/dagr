@@ -3,13 +3,25 @@
         <ul class="sidebar-nav">
             <li>
 				<span>People ({{ people.length }})
-					<a href-"#" data-toggle="tooltip" data-placement="right" title="Tooltip on left"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
+					<a ui-sref="workspaces.invite" data-toggle="tooltip" data-placement="right" title="Tooltip on left"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
 				</span>
 				<ul class="list-unstyled">
 		            <li ng-repeat="person in people">
 						<span>{{ person.name }}
 							<a href-"#"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span></a>
 							<a href-"#"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span></a>
+						</span>
+		            </li>
+				</ul>
+            </li>
+			<li>
+				<span>Clients ({{ clients.length }})
+					<a ui-sref="workspaces.newClient" data-toggle="tooltip" data-placement="right" title="Tooltip on left"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
+				</span>
+				<ul class="list-unstyled">
+		            <li ng-repeat="client in clients">
+						<span>{{ client.name }}
+							
 						</span>
 		            </li>
 				</ul>

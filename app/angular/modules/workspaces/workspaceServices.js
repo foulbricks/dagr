@@ -9,12 +9,15 @@ value("WS_DELETE_PATH", "api/users/workspaces/:id").
 value("WS_JOIN_PATH", "api/users/workspaces/join/:id").
 value("WS_DELETE_MEMBER_PATH", "api/users/:user/workspaces/delete/:id").
 value("WS_PATH", "api/users/workspaces/:id").
+value("WS_DISMISS_PATH", "api/users/worskpaces/dismiss/:id").
 
 factory("workspaceService", [
 	"$http", "WS_LIST_PATH", "NEW_WS_PATH", "WS_PEOPLE_PATH", "WS_PEEP_SUGGEST_PATH",
 	"WS_INVITE_PATH", "WS_DELETE_PATH", "WS_JOIN_PATH", "WS_DELETE_MEMBER_PATH", "WS_PATH",
+	"WS_DISMISS_PATH",
 	function($http, WS_LIST_PATH, NEW_WS_PATH, WS_PEOPLE_PATH, WS_PEEP_SUGGEST_PATH,
-		WS_INVITE_PATH, WS_DELETE_PATH, WS_JOIN_PATH, WS_DELETE_MEMBER_PATH, WS_PATH){
+		WS_INVITE_PATH, WS_DELETE_PATH, WS_JOIN_PATH, WS_DELETE_MEMBER_PATH, WS_PATH,
+		WS_DISMISS_PATH){
 		var workspace = {}
 		
 		workspace.list = function(){
@@ -47,7 +50,12 @@ factory("workspaceService", [
 		
 		workspace.join = function(id){
 			var id = id || "";
-			return $http.get(WS_JOIN_PATH.replace(":id", id));
+			return $http.put(WS_JOIN_PATH.replace(":id", id));
+		}
+		
+		workspace.dismiss = function(id){
+			var id = id || "";
+			return $http.put(WS_DISMISS_PATH.replace(":id", id));
 		}
 		
 		workspace.deleteMember = function(id, user){

@@ -17,9 +17,10 @@ var workspaceSchema = new Schema({
 
 // VALIDATION - Do not allow more than the limit of workspaces
 workspaceSchema.path("owner").validate(function(val, respond){
+	var self = this;
 	this.model("Workspace").count({ owner: val }, function(err, count){
 		if(err) respond(false);
-		count >= LIMIT ? respond(false) : respond(true);
+		count >= LIMIT && !self.id ? respond(false) : respond(true);
 	});
 }, "You cannot have more than " + LIMIT + " workspaces");
 
@@ -29,7 +30,7 @@ workspaceSchema.path("name").validate(function(name, respond){
 	this.model("Workspace").count({ name: name, owner: self.owner},
 		function(err, count){
 			if(err) respond(false);
-			count > 0 ? respond(false) : respond(true)
+			count > 0 && self.name != name ? respond(false) : respond(true)
 		}
 	);
 });

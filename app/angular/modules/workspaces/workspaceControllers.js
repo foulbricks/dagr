@@ -1,10 +1,11 @@
 angular.module("Dagr.workspaces.controllers", []).
 
 controller("WorkspaceController", [
-	"$scope", "workspaceService",
-	function($scope, workspaceService){
+	"$rootScope", "$scope", "workspaceService",
+	function($rootScope, $scope, workspaceService){
 		$scope.people = [];
 		$scope.projects = [];
+		$scope.clients = [];
 		
 		$scope.$watch(
 			function(){
@@ -13,16 +14,21 @@ controller("WorkspaceController", [
 			function(newVal){
 				if(newVal){
 					$scope.mainWorkspace = newVal;
-					workspaceService.people($scope.mainWorkspace.id).
-					success(function(data){
-						$scope.people = data.users
-					}).
-					error(function(err){
-						$scope.people = []
-					});
+					peopleList();
 				}
 			}
 		);
+		
+		function peopleList(){
+			workspaceService.people($scope.mainWorkspace.id).
+			success(function(data){
+				$scope.people = data.users
+				$rootScope.$broadcast("users:list", data.users);
+			}).
+			error(function(err){
+				$scope.people = []
+			});
+		}
 	}
 ]).
 
@@ -120,22 +126,47 @@ controller("WorkspaceInvite", [
 ]).
 
 controller("WorkspaceDestroy", [
-	"$scope", "workspaceService", "$state",
-	function($scope, workspaceService, $state){
-		
+	"$rootScope", "$scope", "workspaceService", "$state",
+	function($rootScope, $scope, workspaceService, $state){
+
+		$scope.deleteWorkspace = function(){
+			workspaceService.delete($scope.mainWorkspace.id).
+			success(function(){
+				workspaceService.main = null;
+				$rootScope.$broadcast("workspace:reload");
+				$state.go("workspaces.index");
+			});
+		}
 	}
 ]).
 
 controller("WorkspaceDeleteMembers", [
-	"$scope", "workspaceService", "$state",
-	function($scope, workspaceService, $state){
+	"$rootScope", "$scope", "workspaceService", "$state",
+	function($rootScope, $scope, workspaceService, $state){
+		$scope.members = [];
+		$scope.$on("users:list", function(event, peeps){
+			peeps.forEach(function(person){
+				if($scope.mainWorkspace.owner != person.id){
+					$scope.members.push(person);
+				}
+			});
+		});
 		
+		$scope.deleteMember = function(id){
+			workspaceService.deleteMember($scope.mainWorkspace.id, id).
+			success(function(){
+				var index = $scope.people.indexOf(id);
+				$scope.people.splice(index, 1);
+				var mIndex = $scope.members.indexOf(id);
+				$scope.members.splice(mIndex, 1);
+			});
+		}
 	}
 ]).
 
 controller("WorkspaceManageInvitations", [
-	"$scope", "workspaceService", "$state", "authService",
-	function($scope, workspaceService, $state, authService){
+	"$rootScope", "$scope", "workspaceService", "$state", "authService", "$window",
+	function($rootScope, $scope, workspaceService, $state, authService, $window){
 		$scope.workspaces = [];
 		
 		$scope.$watch(function(){
@@ -149,6 +180,36 @@ controller("WorkspaceManageInvitations", [
 					});
 				});
 			}
+			else {
+				$scope.worskpaces = [];
+			}
 		});
+		
+		$scope.joinWorkspace = function(id){
+			workspaceService.join(id).
+			success(function(){
+				var index = authService.user.invites.indexOf(id);
+				if(index > -1){
+					var wIndex = $scope.workspaces.indexOf(id);
+					$scope.workspaces.splice(wIndex, 1);
+					authService.user.invites.splice(index, 1);
+					$window.localStorage.user = JSON.stringify(authService.user);
+					$rootScope.$broadcast("workspace:reload");
+				}
+			});
+		}
+		
+		$scope.dismissInvite = function(id){
+			workspaceService.dismiss(id).
+			success(function(){
+				var index = authService.user.invites.indexOf(id);
+				if(index > -1){
+					authService.user.invites.splice(index, 1);
+					$window.localStorage.user = JSON.stringify(authService.user);
+					var wIndex = $scope.workspaces.indexOf(id);
+					$scope.workspaces.splice(wIndex, 1);
+				}
+			});
+		}
 	}
 ]);

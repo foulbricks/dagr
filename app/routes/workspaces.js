@@ -148,7 +148,7 @@ router.get("/workspaces/users/suggest/:id?", function(req, res, next){
 router.get("/workspaces/users/:id", function(req, res, next){
 	var workspace = req.workspace;
 	if(Workspace.userIsMember(workspace, req.user.id)){
-		User.find({_id: workspace.minions.concat(workspace.owner)}, function(err, users){
+		User.find({_id: {$in: workspace.minions.concat(workspace.owner)} }, function(err, users){
 			if(err) return next(err);
 			if(!users) return res.json({users: [] });
 		
@@ -158,7 +158,7 @@ router.get("/workspaces/users/:id", function(req, res, next){
 });
 
 // Join workspace after invite
-router.post("/users/workspaces/join/:id", function(req, res, next){
+router.put("/users/workspaces/join/:id", function(req, res, next){
 	User.findById(req.user.id, function(err, user){
 		if(err) return next(err);
 		if(!user) return res.status(400).json({ error: "User not found" });
@@ -182,6 +182,27 @@ router.post("/users/workspaces/join/:id", function(req, res, next){
 		}
 		else {
 			res.status(400).json({error: "Can't join without being invited!"});
+		}
+	});
+});
+
+router.put("/users/worskpaces/dismiss/:id", function(req, res, next){
+	User.findById(req.user.id, function(err, user){
+		if(err) return next(err);
+		if(!user) res.status(400).json({ error: "User not found" });
+		
+		var workspace = req.workspace;
+		var index = user.workspaceInvites.indexOf(workspace.id);
+		
+		if(index > -1){
+			user.workspaceInvites.splice(index, 1);
+			user.save(function(err){
+				if(err) return res.status(400).json({ status: false, error: utils.errorList(err) });
+				res.json({status: true});
+			});
+		}
+		else {
+			res.status(400).json({error: "Can't dismiss invite without being invited!"});
 		}
 	});
 });
@@ -217,7 +238,7 @@ router.put("/users/:user/workspaces/delete/:id", function(req, res, next){
 			if(user){
 				var index = workspace.minions.indexOf(user.id);
 				if(index > -1){
-					workspace.minions.slice(index, 1);
+					workspace.minions.splice(index, 1);
 					workspace.save(function(err){
 						if(err) return next(err);
 						res.json({ status: true });

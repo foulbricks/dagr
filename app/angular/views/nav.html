@@ -44,8 +44,8 @@
 						<ul class="dropdown-menu" role="menu">
 							<li><a ui-sref="workspaces.new"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>  Create workspace</a></li>
 							<li><a ui-sref="workspaces.invite"><span class="glyphicon glyphicon-glass" aria-hidden="true"></span>  Invite users</a></li>
-							<li><a ui-sref="workspaces.deleteMembers"><span class="glyphicon glyphicon-thumbs-down" aria-hidden="true"></span>  Delete users</a></li>
-							<li><a ui-sref="workspaces.delete"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>  Delete workspace</a></li>
+							<li ng-if="user.id == mainWorkspace.owner"><a ui-sref="workspaces.deleteMembers"><span class="glyphicon glyphicon-thumbs-down" aria-hidden="true"></span>  Delete users</a></li>
+							<li ng-if="user.id == mainWorkspace.owner"><a ui-sref="workspaces.delete"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>  Delete workspace</a></li>
 						</ul>
 					</li>
 				</ul>

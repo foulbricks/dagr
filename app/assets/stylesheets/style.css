@@ -9026,26 +9026,26 @@ input.ng-dirty.ng-invalid {
   right: 20px;
 }
 
-.workspace-box {
+.actions-box {
   position: relative;
   border: 1px solid #E7E7E7;
   padding: 20px !important;
   margin: 20px 0 !important;
   background-color: #F8F8F8;
 }
-.workspace-box .actions {
+.actions-box .actions {
   display: block;
   position: absolute;
   top: 15px;
   right: 30px;
 }
-.workspace-box .actions a {
+.actions-box .actions a {
   margin-left: 30px;
 }
-.workspace-box .actions .join {
+.actions-box .actions .join {
   color: #3C763D;
 }
-.workspace-box .actions .dismiss {
+.actions-box .actions .dismiss {
   color: #A94442;
 }
 

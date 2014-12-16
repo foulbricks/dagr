@@ -24,6 +24,10 @@ controller("NavController", [
 			}
 		);
 		
+		$scope.$on("workspace:reload", function(){
+			getWorkspaceList();
+		});
+		
 		$scope.changeWorkspace = function(id){
 			var ids = $scope.workspaces.map(function(w){ return w.id });
 			var index = ids.indexOf(id);
