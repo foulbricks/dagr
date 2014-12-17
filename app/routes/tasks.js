@@ -54,11 +54,17 @@ router.param("id", function(req, res, next, id){
 router.get("/workspaces/:workspace/tasks", function(req, res, next){
 	var workspace = req.workspace;
 	
-	Client.find({workspace: workspace.id}, 
-		function(err, tasks){
+	Client.find({_id: {$in: workspace.clients} }, 
+		function(err, clients){
 			if(err) return next(err);
-			if(!tasks) return res.json({projects: []});
-			tasks.map(function(task){ return })
+			if(!clients) return res.json({clients: []});
+			clients.forEach(function(client){
+				Task.find({client: client.id}, function(err, tasks){
+					if(err) return next(err);
+					if(!tasks) client.tasks = [];
+					client.tasks = tasks;
+				});
+			});
 			
 			
 			res.json({projects: projects});
