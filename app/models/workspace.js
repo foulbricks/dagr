@@ -46,7 +46,7 @@ workspaceSchema.method("toJSON", function(){
 		id: workspace.id,
 		name: workspace.name,
 		owner: workspace.owner,
-		people: []
+		clients: workspace.clients
 	}
 })
 

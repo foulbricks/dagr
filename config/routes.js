@@ -9,6 +9,7 @@ module.exports = function(app, dir){
 	var workspaces = require(dir + "/app/routes/workspaces");
 	var clients = require(dir + "/app/routes/clients");
 	var projects = require(dir + "/app/routes/projects");
+	var tasks = require(dir + "/app/routes/tasks");
 	
 	app.use('/api', expressJwt({secret: config.jwtSecret}).unless({ path: ["/api/signup", "/api/login"] }));
 	app.use("/api", sessions);
@@ -16,6 +17,7 @@ module.exports = function(app, dir){
 	app.use("/api", workspaces);
 	app.use("/api", clients);
 	app.use("/api", projects);
+	app.use("/api", tasks);
 	
 	app.get("*", function(req, res){
 		res.sendfile(dir + '/public/dist/views/index.html');
