@@ -8,4 +8,13 @@ var clientSchema = new Schema({
 	projects: [{ type: Schema.Types.ObjectId, ref: "Project" }]
 });
 
+clientSchema.method("toJSON", function(){
+	var client = this;
+	return {
+		id: client.id,
+		name: client.name,
+		projects: client.projects
+	}
+});
+
 module.exports = mongoose.model("Client", clientSchema);

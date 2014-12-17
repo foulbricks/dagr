@@ -8,11 +8,12 @@ controller("ClientList", [
 ]).
 
 controller("ClientNew", [
-	"$scope", "clientService", "$state",
-	function($scope, clientService, $state){
+	"$rootScope", "$scope", "clientService", "$state",
+	function($rootScope, $scope, clientService, $state){
 		$scope.newClient = function(){
 			clientService.new($scope.mainWorkspace.id, {client: $scope.client}).
 			success(function(data){
+				$rootScope.$broadcast("client:update");
 				$state.go("workspaces.index");
 			}).
 			error(function(err){
@@ -24,15 +25,46 @@ controller("ClientNew", [
 ]).
 
 controller("ClientUpdate", [
-	"$scope",
-	function($scope){
+	"$rootScope", "$scope", "$state", "$stateParams", "clientService",
+	function($rootScope, $scope, $state, $stateParams, clientService){
 		
+		clientService.one($stateParams.workspace, $stateParams.id).
+		success(function(data){
+			$scope.client = data.client
+		}).
+		error(function(err){
+			$scope.client = []
+		});
+		
+		$scope.updateClient = function(){
+			clientService.update($scope.mainWorkspace.id, $stateParams.id, {client: $scope.client}).
+			success(function(){
+				$rootScope.$broadcast("client:update");
+				$state.go("workspaces.index");
+			}).
+			error(function(){
+				$scope.errors = err.error;
+				$scope.invalid = true;
+			});
+		}
 	}
 ]).
 
 controller("ClientDelete", [
-	"$scope",
-	function($scope){
+	"$rootScope", "$scope", "$state", "$stateParams", "clientService",
+	function($rootScope, $scope, $state, $stateParams, clientService){
 		
+		clientService.one($stateParams.workspace, $stateParams.id).
+		success(function(data){
+			$scope.client = data.client
+		});
+		
+		$scope.deleteClient = function(){
+			clientService.delete($stateParams.workspace, $stateParams.id).
+			success(function(){
+				$rootScope.$broadcast("client:update");
+				$state.go("workspaces.index");
+			});
+		}
 	}
 ]);

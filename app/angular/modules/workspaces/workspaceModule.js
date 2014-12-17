@@ -1,8 +1,6 @@
 angular.module("Dagr.workspaces", [
 	"Dagr.workspaces.services",
-	"Dagr.workspaces.controllers",
-	"Dagr.clients.controllers",
-	"Dagr.clients.services"
+	"Dagr.workspaces.controllers"
 ]).
 
 config([
@@ -49,11 +47,6 @@ config([
 			url: "/delete-members",
 			controller: "WorkspaceDeleteMembers",
 			templateUrl: "/dist/modules/workspaces/views/delete_members.html"
-		}).
-		state("workspaces.newClient", {
-			url: "/client/new",
-			controller: "ClientNew",
-			templateUrl: "/dist/modules/clients/views/new.html"
 		});
 	}
 ]).

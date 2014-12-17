@@ -7,7 +7,9 @@ angular.module('Dagr', [
 	'ngCookies',
 	'Dagr.workspaces',
 	'Dagr.sessions',
-	'Dagr.users'
+	'Dagr.users',
+	'Dagr.clients',
+	'Dagr.projects'
 ]).
 
 config([

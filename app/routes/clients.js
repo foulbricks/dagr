@@ -24,12 +24,12 @@ router.param("id", function(req, res, next, id){
 		if(err){
 			next(err);
 		}
-		else if(workspace){
+		else if(client){
 			req.client = client;
 			next();
 		}
 		else {
-			next(new Error("Workspace not found"));
+			next(new Error("Client not found"));
 		}
 	});
 });
@@ -41,7 +41,7 @@ router.get("/workspaces/:workspace/clients", function(req, res, next){
 		function(err, clients){
 			if(err) return next(err);
 			if(!clients) return res.json({clients: []});
-			res.json({clients: workspaces});
+			res.json({clients: clients});
 		}
 	);
 });
@@ -81,6 +81,7 @@ router.post("/workspaces/:workspace/client", function(req, res, next){
 // Update client
 router.put("/workspaces/:workspace/client/:id", function(req, res, next){
 	var data = req.body.client;
+	console.log(data);
 	var workspace = req.workspace;
 	var client = req.client;
 	

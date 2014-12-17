@@ -1,8 +1,8 @@
 angular.module("Dagr.workspaces.controllers", []).
 
 controller("WorkspaceController", [
-	"$rootScope", "$scope", "workspaceService",
-	function($rootScope, $scope, workspaceService){
+	"$rootScope", "$scope", "workspaceService", "clientService", "projectService",
+	function($rootScope, $scope, workspaceService, clientService, projectService){
 		$scope.people = [];
 		$scope.projects = [];
 		$scope.clients = [];
@@ -15,9 +15,19 @@ controller("WorkspaceController", [
 				if(newVal){
 					$scope.mainWorkspace = newVal;
 					peopleList();
+					clientList($scope.mainWorkspace.id);
+					projectList($scope.mainWorkspace.id);
 				}
 			}
 		);
+		
+		$scope.$on("client:update", function(){
+			clientList($scope.mainWorkspace.id);
+		});
+		
+		$scope.$on("project:update", function(){
+			projectList($scope.mainWorkspace.id);
+		});
 		
 		function peopleList(){
 			workspaceService.people($scope.mainWorkspace.id).
@@ -27,6 +37,26 @@ controller("WorkspaceController", [
 			}).
 			error(function(err){
 				$scope.people = []
+			});
+		}
+		
+		function clientList(workspace_id){
+			clientService.list(workspace_id).
+			success(function(data){
+				$scope.clients = data.clients;
+			}).
+			error(function(err){
+				$scope.clients = [];
+			});
+		}
+		
+		function projectList(workspace_id){
+			projectService.list(workspace_id).
+			success(function(data){
+				$scope.projects = data.projects;
+			}).
+			error(function(err){
+				$scope.projects = [];
 			});
 		}
 	}

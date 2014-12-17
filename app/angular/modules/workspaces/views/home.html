@@ -2,7 +2,7 @@
     <div id="sidebar-wrapper">
         <ul class="sidebar-nav">
             <li>
-				<span>People ({{ people.length }})
+				<span>People <small>({{ people.length }})</small>
 					<a ui-sref="workspaces.invite" data-toggle="tooltip" data-placement="right" title="Tooltip on left"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
 				</span>
 				<ul class="list-unstyled">
@@ -15,25 +15,27 @@
 				</ul>
             </li>
 			<li>
-				<span>Clients ({{ clients.length }})
+				<span>Clients <small>({{ clients.length }})</small>
 					<a ui-sref="workspaces.newClient" data-toggle="tooltip" data-placement="right" title="Tooltip on left"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
 				</span>
 				<ul class="list-unstyled">
 		            <li ng-repeat="client in clients">
 						<span>{{ client.name }}
-							
+							<a ui-sref="workspaces.deleteClient({id: client.id, workspace: mainWorkspace.id })"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
+							<a ui-sref="workspaces.updateClient({id: client.id, workspace: mainWorkspace.id })"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a>
 						</span>
 		            </li>
 				</ul>
             </li>
 			<li>
-				<span>Projects ({{ projects.length }})
-					<a href-"#" data-toggle="tooltip" data-placement="right" title="Tooltip on left"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
+				<span>Projects <small>({{ projects.length }})</small>
+					<a ui-sref="workspaces.newProject" data-toggle="tooltip" data-placement="right" title="Tooltip on left"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
 				</span>
 				<ul class="list-unstyled">
 		            <li ng-repeat="project in projects">
 						<span>{{ project.name }}
-							
+							<a ui-sref="workspaces.deleteProject({id: project.id })"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
+							<a ui-sref="workspaces.updateProject({id: project.id })"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a>
 						</span>
 		            </li>
 				</ul>
