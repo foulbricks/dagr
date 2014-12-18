@@ -9,7 +9,9 @@ angular.module('Dagr', [
 	'Dagr.sessions',
 	'Dagr.users',
 	'Dagr.clients',
-	'Dagr.projects'
+	'Dagr.projects',
+	'Dagr.tasks',
+	'Dagr.timeEntries'
 ]).
 
 config([

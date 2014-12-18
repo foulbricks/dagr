@@ -58,6 +58,7 @@ router.get("/workspaces/:workspace/tasks", function(req, res, next){
 		function(err, clients){
 			if(err) return next(err);
 			if(!clients) return res.json({clients: []});
+			
 			clients.forEach(function(client){
 				Task.find({client: client.id}, function(err, tasks){
 					if(err) return next(err);
@@ -71,5 +72,41 @@ router.get("/workspaces/:workspace/tasks", function(req, res, next){
 		}
 	);
 });
+
+// List one task
+router.get("/projects/tasks/:id", function(req, res, next){
+	res.json({ task: req.task });
+});
+
+// Process new task
+router.post("/projects/:project/task", function(req, res, next){
+	var project = req.project;
+	var data = req.body.task;
+	
+	var task = new Task({
+		description: data.description,
+		owner: req.user.id,
+		status: "Active",
+		due_date: data.due_date
+	});
+	
+	Client.find({projects: project.id}, function(err, client){
+		if(err) return next(err);
+		if(!client) return res.status(400).json({error: "Client not found"});
+		
+		task.client = client;
+		task.workspace = project.workspace;
+		task.save(function(err, dbTask){
+			if(err) res.status(400).json({ status: false, error: utils.errorList(err) });
+			project.tasks.push(dbTask);
+			
+			project.save(function(err, w){
+				if(err) res.status(400).json({ status: false, error: utils.errorList(err) });
+				res.json({ status: true, errors: null });
+			});
+		});
+	});
+});
+
 
 module.exports = router;
