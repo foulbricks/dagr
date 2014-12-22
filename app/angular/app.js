@@ -22,8 +22,12 @@ config([
 ]).
 
 run([
-	"$state",
-	function($state){
+	"$state", "$window", "$rootScope",
+	function($state, $window, $rootScope){
 		$state.go("login");
+		
+		$rootScope.goBack = function(){
+			$window.history.back();
+		}
 	}
 ]);

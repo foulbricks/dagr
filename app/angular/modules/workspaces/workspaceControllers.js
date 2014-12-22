@@ -63,9 +63,11 @@ controller("WorkspaceController", [
 ]).
 
 controller("WorkspaceIndex", [
-	"$scope", "workspaceService", "authService",
-	function($scope, workspaceService, authService){
-		$scope.workspaces = []
+	"$scope", "workspaceService", "authService", "taskService",
+	function($scope, workspaceService, authService, taskService){
+		$scope.workspaces = [];
+		$scope.tasks = [];
+		
 		$scope.$watch(
 			function(){
 				return authService.user;
@@ -75,11 +77,21 @@ controller("WorkspaceIndex", [
 			}
 		);
 		
-		workspaceService.list().success(function(data){
+		workspaceService.list().
+		success(function(data){
 			$scope.workspaces = data.workspaces;
 		}).
-		error(function(err){
-			$scope.workspaces = []
+		error(function(){
+			$scope.workspaces = [];
+		})
+		
+		$scope.$watch("mainWorkspace", function(workspace){
+			taskService.workspaceList(workspace.id).success(function(data){
+				$scope.tasks = data.tasks;
+			}).
+			error(function(err){
+				$scope.tasks = []
+			});
 		});
 	}
 ]).

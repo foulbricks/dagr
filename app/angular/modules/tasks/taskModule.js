@@ -1,6 +1,7 @@
 angular.module("Dagr.tasks", [
 	"Dagr.tasks.controllers",
-	"Dagr.tasks.services"
+	"Dagr.tasks.services",
+	"ui.bootstrap"
 ]).
 
 config([

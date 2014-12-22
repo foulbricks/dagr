@@ -1,5 +1,6 @@
 .DS_Store
 node_modules/
+app/assets/lib
 public/dist/
 .tmp/
 .gitignore

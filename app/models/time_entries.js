@@ -5,36 +5,25 @@ var User = require("./user");
 var Workspace = require("./workspace");
 var Client = require("./client");
 var Project = require("./project");
+var Task = require("./task");
 
-var taskSchema = new Schema({
-	description: {type: String, required: "Name is required" },
+var entrySchema = new Schema({
 	workspace: { type: Schema.Types.ObjectId, ref: "Workspace" },
 	client: { type: Schema.Types.ObjectId, ref: "Client" },
 	owner: {type: Schema.Types.ObjectId, ref: "User" },
 	project: {type: Schema.Types.ObjectId, ref: "Project"},
-	status: { type: String },
-	due_date: { type: Date },
+	task: {type: Schema.Types.ObjectId, ref: "Task"},
+	start: {type: Date },
+	end: { type: Date  },
+	date: { type: Date },
+	hours: { type: Number },
 	created_at:	{ type: Date },
 	updated_at:	{ type: Date, 	default: new Date }
 });
 
-taskSchema.pre("save", function(next){
+entrySchema.pre("save", function(next){
 	if(!this.created_at) this.created_at = new Date;
 	next();
 });
 
-taskSchema.method("toJSON", function(){
-	var task = this;
-
-	return {
-		id: task.id,
-		description: task.description,
-		status: task.status,
-		due_date: task.due_date,
-		updated_at: task.updated_at,
-		created_at: task.created_at,
-		project: this.project
-	}
-});
-
-module.exports = mongoose.model("Task", taskSchema);
+module.exports = mongoose.model("TimeEntry", entrySchema);

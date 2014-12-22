@@ -62,6 +62,18 @@ router.get("/workspaces/:workspace/project", function(req, res, next){
 	);
 });
 
+//List projects on client
+router.get("/clients/:client/project", function(req, res, next){
+	var client = req.client;
+	Project.find({_id: {$in: client.projects }}, 
+		function(err, projects){
+			if(err) return next(err);
+			if(!projects) return res.json({projects: []});
+			res.json({projects: projects});
+		}
+	);
+});
+
 // List one project
 router.get("/workspaces/project/:id", function(req, res, next){
 	var project = req.project;

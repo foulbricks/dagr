@@ -3,6 +3,7 @@ var router = express.Router();
 var Workspace = require("../models/workspace");
 var Project = require("../models/project");
 var Client = require("../models/client");
+var Task = require("../models/task");
 var utils = require("./lib/utils");
 
 router.param("workspace", function(req, res, next, id){
@@ -58,17 +59,15 @@ router.get("/workspaces/:workspace/tasks", function(req, res, next){
 		function(err, clients){
 			if(err) return next(err);
 			if(!clients) return res.json({clients: []});
+			var clientIds = clients.map(function(client){ return client._id });
 			
-			clients.forEach(function(client){
-				Task.find({client: client.id}, function(err, tasks){
+			Task.find({client: {$in: clientIds} })
+				.populate("project")
+				.exec(function(err, tasks){
 					if(err) return next(err);
-					if(!tasks) client.tasks = [];
-					client.tasks = tasks;
+					if(!tasks) return res.json({tasks: []});
+					res.json({tasks: tasks});
 				});
-			});
-			
-			
-			res.json({projects: projects});
 		}
 	);
 });
@@ -90,14 +89,16 @@ router.post("/projects/:project/task", function(req, res, next){
 		due_date: data.due_date
 	});
 	
-	Client.find({projects: project.id}, function(err, client){
+	Client.findOne({projects: project.id}, function(err, client){
 		if(err) return next(err);
 		if(!client) return res.status(400).json({error: "Client not found"});
 		
-		task.client = client;
+		task.client = client._id;
 		task.workspace = project.workspace;
+		task.project = project._id;
+		
 		task.save(function(err, dbTask){
-			if(err) res.status(400).json({ status: false, error: utils.errorList(err) });
+			if(err) return res.status(400).json({ status: false, error: utils.errorList(err) });
 			project.tasks.push(dbTask);
 			
 			project.save(function(err, w){
