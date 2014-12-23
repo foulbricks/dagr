@@ -11,7 +11,8 @@ directive("calendar", [
 				currentDay: "=calendarCurrentDay",
 				control: "=calendarControl",
 				useIsoWeek: "=calendarUseIsoWeek",
-				autoOpen: "=calendarAutoOpen"
+				autoOpen: "=calendarAutoOpen",
+				clients: "=clients"
 			},
 			controller: ["$scope", function($scope){
 				var self = this;
@@ -43,8 +44,8 @@ directive("calendar", [
 ]).
 
 directive("calendarMonth", [
-	"$sce", "$timeout", "calendarHelperService",
-	function($sce, $timeout, calendarHelperService){
+	"$sce", "$timeout", "calendarHelperService", "projectService", "taskService",
+	function($sce, $timeout, calendarHelperService, projectService, taskService){
 		return {
 			templateUrl: "/dist/modules/calendar/views/month.html",
 			restrict: "A",
@@ -52,11 +53,12 @@ directive("calendarMonth", [
 			scope: {
 				currentDay: "=calendarCurrentDay",
 				useIsoWeek: "=calendarUseIsoWeek",
-				autoOpen: "=calendarAutoOpen"
+				autoOpen: "=calendarAutoOpen",
+				clients: "=clients"
 			},
 			link: function postLink(scope, element, attrs, calendarController){
 				var firstRun = false;
-				
+				scope.timeEntry = {};
 				scope.$sce = $sce;
 				
 				calendarController.titleFunctions.month = function(currentDay){
@@ -79,6 +81,34 @@ directive("calendarMonth", [
 					
 				scope.$watch("currentDay", updateView);
 				scope.weekDays = calendarHelperService.getWeekNames(false);
+				
+				scope.$watch(function(){
+					return scope.timeEntry.client;
+				}, function(newClient){
+					if(newClient){
+						projectService.listByClient(newClient).
+						success(function(data){
+							scope.projects = data.projects;
+						}).
+						error(function(){
+							scope.projects = [];
+						});
+					}
+				});
+				
+				scope.$watch(function(){
+					return scope.timeEntry.project;
+				}, function(newProject){
+					if(newProject){
+						taskService.listByProject(newProject).
+						success(function(data){
+							scope.tasks = data.tasks;
+						}).
+						error(function(){
+							scope.tasks = [];
+						});
+					}
+				});
 				
 			}
 		}

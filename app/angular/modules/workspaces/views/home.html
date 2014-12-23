@@ -3,7 +3,7 @@
         <ul class="sidebar-nav">
             <li>
 				<span>People <small>({{ people.length }})</small>
-					<a ui-sref="workspaces.invite" data-toggle="tooltip" data-placement="right" title="Tooltip on left"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
+					<a ui-sref="workspaces.invite"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
 				</span>
 				<ul class="list-unstyled">
 		            <li ng-repeat="person in people">
@@ -16,7 +16,7 @@
             </li>
 			<li>
 				<span>Clients <small>({{ clients.length }})</small>
-					<a ui-sref="workspaces.newClient" data-toggle="tooltip" data-placement="right" title="Tooltip on left"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
+					<a ui-sref="workspaces.newClient"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
 				</span>
 				<ul class="list-unstyled">
 		            <li ng-repeat="client in clients">
@@ -29,7 +29,7 @@
             </li>
 			<li>
 				<span>Projects <small>({{ projects.length }})</small>
-					<a ui-sref="workspaces.newProject" data-toggle="tooltip" data-placement="right" title="Tooltip on left"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
+					<a ui-sref="workspaces.newProject"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
 				</span>
 				<ul class="list-unstyled">
 		            <li ng-repeat="project in projects">

@@ -1,0 +1,57 @@
+<div class="row"> 
+	<div class="col-sm-12">
+		<form name="newTimeEntryForm" id="newTimeEntryForm" ng-submit="newTimeEntry()" style="width: 320px;" novalidate>
+			<div ng-show="invalid" class="alert alert-danger">
+				<ul>
+					<li ng-repeat="err in errors">{{ err }}</li>
+				</ul>
+			</div>
+			
+			<div class="form-group col-sm-6" ng-class="{'has-error': newTimeEntryForm.date.$dirty && newTimeEntryForm.date.$invalid}">
+				<label for="date" class="control-label"><i class="fa fa-calendar"></i> Date*</label>
+				<input type="text" class="form-control" ng-model="timeEntry.date" name="date" ng-required="true" data-container="#newTimeEntryForm" data-autoclose="1" bs-datepicker />
+				<span class="error-message" ng-show="newTimeEntryForm.date.$dirty && newTimeEntryForm.date.$invalid">Date is required.</span>
+			</div>
+			
+			<div class="form-group col-sm-6" ng-class="{'has-error':newTimeEntryForm.hours.$dirty && newTimeEntryForm.hours.$invalid }">
+				<label for="hours" class="control-label">Hours*:</label>
+		      	<input type="text" class="form-control" id="hours" name="hours" placeholder="Hours" ng-model="timeEntry.hours" ng-required="true" />
+				<span class="error-message" ng-show="newTimeEntryForm.hours.$dirty && newTimeEntryForm.hours.$invalid">Hours are required.</span>
+			</div>
+			
+			<div class="form-group" ng-class="{'has-error':newTimeEntryForm.client.$dirty && newTimeEntryForm.client.$invalid }">
+				<label for="client" class="control-label">Client*:</label>
+				<select class="form-control" name="client" ng-required="true" ng-model="timeEntry.client" ng-options="client.id as client.name for client in clients">
+					<option value="">Please select</option>
+				</select>
+				<span class="error-message" ng-show="newTimeEntryForm.client.$dirty && newTimeEntryForm.client.$invalid">Client is required.</span>
+			</div>
+			
+			<div class="form-group" ng-class="{'has-error':newTimeEntryForm.project.$dirty && newTimeEntryForm.project.$invalid }">
+				<label for="project" class="control-label">Project*:</label>
+				<select class="form-control" name="project" ng-required="true" ng-model="timeEntry.project" ng-options="project.id as project.name for project in projects">
+					<option value="">Please select</option>
+				</select>
+				<span class="error-message" ng-show="newTimeEntryForm.project.$dirty && newTimeEntryForm.project.$invalid">Project is required.</span>
+			</div>
+			
+			<div class="form-group" ng-class="{'has-error':newTimeEntryForm.task.$dirty && newTimeEntryForm.task.$invalid }">
+				<label for="task" class="control-label">Task*:</label>
+				<select class="form-control" name="task" ng-required="true" ng-model="timeEntry.task" ng-options="task.id as task.name for task in tasks">
+					<option value="">Please select</option>
+				</select>
+				<span class="error-message" ng-show="newTimeEntryForm.task.$dirty && newTimeEntryForm.task.$invalid">Task is required.</span>
+			</div>
+			
+			<div class="form-group">
+		    	<div class="col-sm-9">
+		      		<p><button type="submit" class="btn btn-lg btn-primary" ng-disabled="newTimeEntryForm.$invalid">Submit</button></p>
+					<p><small>*required</small></p>
+		    	</div>
+				<div class="col-sm-3">
+					<p style="position:relative;right:-20px;bottom:-40px;"><a href="javascript:;" ng-click="$hide()"><small>close</small></a></p>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>

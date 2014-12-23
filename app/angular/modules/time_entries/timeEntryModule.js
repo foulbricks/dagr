@@ -1,6 +1,7 @@
 angular.module("Dagr.timeEntries", [
 	"Dagr.timeEntries.controllers",
-	"calendar"
+	"calendar",
+	"mgcrea.ngStrap"
 ]).
 
 config([

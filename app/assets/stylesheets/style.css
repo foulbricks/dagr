@@ -9057,6 +9057,10 @@ input.ng-dirty.ng-invalid {
   background-color: #F8F8F8;
 }
 
+.popover {
+  max-width: 350px !important;
+}
+
 @media (min-width: 768px) {
   .navbar-header {
     width: 180px;
@@ -9741,10 +9745,12 @@ a.cal-event-week {
 
 .cal-box {
   padding: 0;
+  background: #fff;
 }
 
 .cal-month-control, .cal-month-control .row, .cal-month-control .col-xs-8 {
   padding: 0;
+  color: black;
 }
 
 .cal-month-control .row {

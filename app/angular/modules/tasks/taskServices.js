@@ -1,17 +1,23 @@
 angular.module("Dagr.tasks.services", []).
 
 value("TASK_LIST_PATH", "/api/workspaces/:workspace/tasks").
+value("TASK_PROJECT_LIST_PATH", "/api/projects/:project/tasks").
 value("TASK_PATH", "/api/projects/tasks/:id").
 value("TASK_NEW_PATH", "/api/projects/:project/task").
 
 factory("taskService", [
-	"$http", "TASK_LIST_PATH", "TASK_PATH", "TASK_NEW_PATH",
-	function($http, TASK_LIST_PATH, TASK_PATH, TASK_NEW_PATH){
+	"$http", "TASK_LIST_PATH", "TASK_PATH", "TASK_NEW_PATH", "TASK_PROJECT_LIST_PATH",
+	function($http, TASK_LIST_PATH, TASK_PATH, TASK_NEW_PATH, TASK_PROJECT_LIST_PATH){
 		var task = {}
 		
 		task.workspaceList = function(workspace_id){
 			workspace_id = workspace_id || "";
 			return $http.get(TASK_LIST_PATH.replace(":workspace", workspace_id));
+		}
+		
+		task.listByProject = function(project_id){
+			project_id = project_id || "";
+			return $http.get(TASK_PROJECT_LIST_PATH.replace(":project", project_id));
 		}
 		
 		task.one = function(id){

@@ -88,6 +88,10 @@ input.ng-dirty.ng-invalid{
 	background-color: #F8F8F8;
 }
 
+.popover {
+	max-width: 350px !important;
+}
+
 @media(min-width:768px) {
 	.navbar-header {
 		width: 180px;
