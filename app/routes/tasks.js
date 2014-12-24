@@ -72,6 +72,16 @@ router.get("/workspaces/:workspace/tasks", function(req, res, next){
 	);
 });
 
+router.get("/projects/:project/tasks", function(req, res, next){	
+	Project.findOne({_id: req.params.project }).
+		populate("tasks").
+		exec(function(err, project){
+			if(err) return next(err);
+			if(!project) return res.json({tasks: []});
+			res.json({tasks: project.tasks});
+	});
+});
+
 // List one task
 router.get("/projects/tasks/:id", function(req, res, next){
 	res.json({ task: req.task });

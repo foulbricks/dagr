@@ -1,5 +1,6 @@
 angular.module("Dagr.timeEntries", [
 	"Dagr.timeEntries.controllers",
+	"Dagr.timeEntries.services",
 	"calendar",
 	"mgcrea.ngStrap"
 ]).

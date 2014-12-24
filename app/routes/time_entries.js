@@ -4,10 +4,14 @@ var Workspace = require("../models/workspace");
 var Entry = require("../models/time_entry");
 var middleware = require("./lib/middleware");
 
-router.param("workspace", middleware.populate(req, res, next, id, Workspace, "Workspace"));
-router.param("id", middleware.populate(req, res, next, id, Entry, "Entry"));
+router.param("workspace", function(req, res, next, id){
+	middleware.populate(req, res, next, id, Workspace, "Workspace");
+});
+router.param("id", function(req, res, next, id){
+	middleware.populate(req, res, next, id, Entry, "Entry")
+});
 
-router.get("workspaces/:workspace/time_entries/:year/:month", function(req, res, next){
+router.get("/workspaces/:workspace/time_entries/:year/:month", function(req, res, next){
 	var workspace = req.workspace,
 		user = req.user,
 		start = new Date(req.params.year, req.params.month, 1),
@@ -27,7 +31,7 @@ router.get("workspaces/:workspace/time_entries/:year/:month", function(req, res,
 	});
 });
 
-router.get("workspaces/:workspace/time_entry/:id", function(req, res, next){
+router.get("/workspaces/:workspace/time_entry/:id", function(req, res, next){
 	var workspace = req.workspace;
 	var user = req.user;
 	
@@ -37,7 +41,7 @@ router.get("workspaces/:workspace/time_entry/:id", function(req, res, next){
 	});
 });
 
-router.post("workspaces/:workspace/time_entry", function(req, res, next){
+router.post("/workspaces/:workspace/time_entry", function(req, res, next){
 	var workspace = req.workspace;
 	var user = req.user;
 	var data = req.body.timeEntry;
@@ -61,7 +65,7 @@ router.post("workspaces/:workspace/time_entry", function(req, res, next){
 	
 })
 
-router.put("workspaces/:workspace/time_entry/:id", function(req, res, next){
+router.put("/workspaces/:workspace/time_entry/:id", function(req, res, next){
 	var entry = req.entry;
 	var data = req.body.timeEntry;
 	
@@ -79,7 +83,7 @@ router.put("workspaces/:workspace/time_entry/:id", function(req, res, next){
 	});
 });
 
-router.delete("workspaces/:workspace/time_entry/:id", function(req, res, next){
+router.delete("/workspaces/:workspace/time_entry/:id", function(req, res, next){
 	var entry = req.entry;
 	
 	entry.remove(function(err){

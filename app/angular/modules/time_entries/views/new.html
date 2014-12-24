@@ -37,7 +37,7 @@
 			
 			<div class="form-group" ng-class="{'has-error':newTimeEntryForm.task.$dirty && newTimeEntryForm.task.$invalid }">
 				<label for="task" class="control-label">Task*:</label>
-				<select class="form-control" name="task" ng-required="true" ng-model="timeEntry.task" ng-options="task.id as task.name for task in tasks">
+				<select class="form-control" name="task" ng-required="true" ng-model="timeEntry.task" ng-options="task.id as (task.description | limitTo:30) for task in tasks">
 					<option value="">Please select</option>
 				</select>
 				<span class="error-message" ng-show="newTimeEntryForm.task.$dirty && newTimeEntryForm.task.$invalid">Task is required.</span>

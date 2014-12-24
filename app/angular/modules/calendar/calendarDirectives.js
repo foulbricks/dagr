@@ -44,8 +44,8 @@ directive("calendar", [
 ]).
 
 directive("calendarMonth", [
-	"$sce", "$timeout", "calendarHelperService", "projectService", "taskService",
-	function($sce, $timeout, calendarHelperService, projectService, taskService){
+	"$sce", "$timeout", "calendarHelperService", "workspaceService", "projectService", "taskService", "timeEntryService",
+	function($sce, $timeout, calendarHelperService, workspaceService, projectService, taskService, timeEntryService){
 		return {
 			templateUrl: "/dist/modules/calendar/views/month.html",
 			restrict: "A",
@@ -81,6 +81,20 @@ directive("calendarMonth", [
 					
 				scope.$watch("currentDay", updateView);
 				scope.weekDays = calendarHelperService.getWeekNames(false);
+				
+				scope.newTimeEntry = function(){
+					timeEntryService.new(workspaceService.main.id, {timeEntry: scope.timeEntry}).
+					success(function(data){
+						scope.success = true;
+						$timeout(function(){
+							scope.success = false;
+						}, 3000);
+					}).
+					error(function(err){
+						scope.errors = err.error;
+						scope.invalid = true;
+					});
+				}
 				
 				scope.$watch(function(){
 					return scope.timeEntry.client;
